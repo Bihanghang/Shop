@@ -1,0 +1,62 @@
+<table width="640">  
+    <tr>  
+        <td class="mainHead">Wrox JSTL Web Store</td>  
+    </tr>  
+    <tr>  
+        <td>  
+            <h1></h1>  
+            <table border="1" width="640">  
+  
+                <tr>  
+                    <th colspan="5" class="shopCart">Your Shopping Cart</th>  
+                </tr>  
+                <tr>  
+                    <th align="left">Quantity</th>  
+                    <th align="left">Item</th>  
+                    <th align="right">Price</th>  
+                    <th align="right">Extended</th>  
+                    <th align="left">Add</th>  
+                </tr>  
+                <c:forEach var="curItem" items="${lineitems}">  
+                    <c:set var="extended" value="${curItem.quantity * curItem.price}" />  
+                    <c:set var="total" value="${total + extended}" />  
+                    <tr>  
+                        <td>${curItem.quantity}</td>  
+                        <td>${curItem.desc}</td>  
+                        <td align="right"><fmt:formatNumber  
+                                value="${curItem.price / 100}" type="currency" /></td>  
+                        <td align="right"><fmt:formatNumber  
+                                value="${extended / 100}" type="currency" /></td>  
+                        <td><c:url value="${EXAMPLE}${CART_PAGE}" var="localURL">  
+                                <c:param name="action" value="inc" />  
+                                <c:param name="sku" value="${curItem.sku}" />  
+                            </c:url> <a href="${localURL}"><b>Add 1</b>  
+                        </a></td>  
+                    </tr>  
+                </c:forEach>  
+                <tr>  
+                    <td colspan="5"> </td>  
+                </tr>  
+                <tr>  
+                    <td colspan="3" align="right"><b>Total:</b>  
+                    </td>  
+                    <td align="right" class="grandTotal"><fmt:formatNumber  
+                            value="${total / 100}" type="currency" /></td>  
+                    <td> </td>  
+                </tr>  
+  
+                <tr>  
+                    <td colspan="5"><c:url value="${EXAMPLE}${CART_PAGE}"  
+                            var="localURL">  
+                            <c:param name="action" value="clear" />  
+                        </c:url> <a href="${localURL}">Clear the cart</a></td>  
+                </tr>  
+  
+  
+                <tr>  
+                    <td colspan="5"><c:url value="${EXAMPLE}${SHOP_PAGE}"  
+                            var="localURL" /> <a href="${localURL}">Return to Shopping</a></td>  
+                </tr>  
+            </table></td>  
+    </tr>  
+</table>  
