@@ -9,7 +9,6 @@
 	    		},
 	    		function(data){
 	    			if(data =="success"){
-	    					log($("#username").val())
 							$("#startlogin").text($("#username").val())　
 	    		　　　　　　}else if(data == "fail"){
 	    					alert("密码错误！")
@@ -18,5 +17,8 @@
 	    		　　　　　　}
 	    		});
  	 });
+	
+	$(".simpleCart_sum").text("$0.00")　
 
+	
 	

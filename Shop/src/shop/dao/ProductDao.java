@@ -29,6 +29,7 @@ public class ProductDao {
 				product.setItem(rs.getString("item"));
 				product.setProduct_name(rs.getString("product_name"));
 				product.setUnit_price(rs.getString("unit_price"));
+				product.setDiscount(rs.getInt("discount"));
 			}
 			if (product.getProduct_name() != null ) {
 				return product;
@@ -56,6 +57,7 @@ public class ProductDao {
 				product.setItem(rs.getString("item"));
 				product.setProduct_name(rs.getString("product_name"));
 				product.setUnit_price(rs.getString("unit_price"));
+				product.setDiscount(rs.getInt("discount"));
 				products.add(product);
 			}
 			if (products != null ) {

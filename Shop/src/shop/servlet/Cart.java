@@ -14,10 +14,8 @@ import com.alibaba.fastjson.JSON;
 
 import shop.bean.User;
 import shop.dao.UserDao;
-
-@WebServlet("/loginServlet.do")
-public class Login extends HttpServlet{
-	
+@WebServlet("/cartServlet")
+public class Cart extends HttpServlet{
 	public void doGet(HttpServletRequest request, HttpServletResponse response)  
             throws ServletException, IOException {  
   
@@ -48,29 +46,19 @@ public class Login extends HttpServlet{
     	response.setContentType("application/json; charset=utf-8");
     	
     	//获取ajax参数并查询
-    	String username = request.getParameter("username");
-    	String password = request.getParameter("password");
-    	UserDao dao = new UserDao();
-		User user = new User();
-		user = dao.UserSearch(username);
+    	String product_id = request.getParameter("product_id");
+    	String user_phone = (String) session.getAttribute("user_phone");
     	
 		//返回Json格式的判断结果
-    	String notexit = JSON.toJSONString("notexit");
-    	String success=JSON.toJSONString("success");
-    	String fail=JSON.toJSONString("fail");
+    	String logined = JSON.toJSONString("logined");
+    	String notlogin=JSON.toJSONString("notlogin");
     	PrintWriter out = null;
     	try {
     	    out = response.getWriter();
-    	    if (user == null) {
-				out.write(notexit);
+    	    if (user_phone != null) {
+				out.write(logined);
 			}else {
-				if (user.getUser_paswprd().equals(password)) {
-					session.setAttribute("user_phone", user.getUser_phone());
-					session.setAttribute("user_name", user.getUser_name());
-					out.write(success);
-				} else {
-					out.write(fail);
-				}
+				out.write(notlogin);
 			}
     	} catch (IOException e) {
     	    e.printStackTrace();

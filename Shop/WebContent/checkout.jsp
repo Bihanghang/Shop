@@ -283,7 +283,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							var="i">
 						<ul class="cart-header" id="cart${i.itemid }">
 							<div class="close2" onclick='g(this.id)' id ="${i.itemid }"> </div>
-								<li class="ring-in"><a href="single.html" ><img src="images/${i.item }.jpg" class="img-responsive" alt=""></a>
+								<li class="ring-in"><a href="single.html" ><img src="images/${i.item }.png" class="img-responsive" alt=""></a>
 								</li>
 								<li><span class="name">${i.product_name }</span></li>
 								<li><span class="cost">$${i.unit_price }</span></li>

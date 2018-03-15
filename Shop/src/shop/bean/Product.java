@@ -2,6 +2,14 @@ package shop.bean;
 
 public class Product {
 	private int itemid;
+	private int discount;
+	
+	public int getDiscount() {
+		return discount;
+	}
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
 	public int getItemid() {
 		return itemid;
 	}
@@ -38,9 +46,10 @@ public class Product {
 	}
 	@Override
 	public String toString() {
-		return "Product [itemid=" + itemid + ", item=" + item + ", product_name=" + product_name + ", unit_price="
-				+ unit_price + ", delivery_details=" + delivery_details + "]";
+		return "Product [itemid=" + itemid + ", discount=" + discount + ", item=" + item + ", product_name="
+				+ product_name + ", unit_price=" + unit_price + ", delivery_details=" + delivery_details + "]";
 	}
+	
 	
 	
 }
