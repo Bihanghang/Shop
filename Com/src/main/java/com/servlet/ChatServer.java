@@ -51,10 +51,9 @@ public class ChatServer {
 		data.setType("客服");
 		JSONObject obj = JSONObject.fromObject(data);
 		for (ChatServer client : connections) {
-			if ("客服".equals(client.nickname) || client.nickname.indexOf("客服to") != -1) 
+			if ("客服".equals(client.nickname)) 
 				client.session.getAsyncRemote().sendText(obj.toString());
 		}
-		
 	}
 	
 	/**
@@ -66,17 +65,27 @@ public class ChatServer {
 	public void onMessage(String message,Session session){
 
 		JSONObject obj = JSONObject.fromObject(message);
+		if( "客服".equals(this.nickname) && "normal".equals(obj.get("type"))){
+			obj.put("date", df.format(new Date()));
+			for (ChatServer client : connections) {
+				obj.put("isSelf", client.session.equals(session));
+				client.session.getAsyncRemote().sendText(obj.toString());
+			}
+		} else if ("changename".equals(obj.get("type"))) {
+			this.nickname = (String) obj.get("nickname");
+		}else {
 		obj.put("date", df.format(new Date()));
 		for (ChatServer client : connections) {
 			obj.put("isSelf", client.session.equals(session));
-			if (client.session.equals(session) || client.nickname.equals("客服")) {
+			if (client.nickname.equals(this.nickname)) {
 				client.session.getAsyncRemote().sendText(obj.toString());
 			}
 		}
-//		for(Session se : room){
-//			obj.put("isSelf", se.equals(session));
-//			se.getAsyncRemote().sendText(obj.toString());
-//		}
+		}
+		
+		for (ChatServer client : connections) {
+			System.out.println("所有用户: "+client.nickname);
+		}
 	}
 	
 	/**

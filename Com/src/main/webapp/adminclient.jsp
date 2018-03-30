@@ -56,7 +56,7 @@
       <li class="admin-parent">
         <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-file"></span> 在线用户 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
-          <li><a href="admin-gallery.html"> 相册页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li>
+          <!-- <li><a href="admin-gallery.html"> 相册页面<span class="am-badge am-badge-secondary am-margin-right am-fr">24</span></a></li> -->
         </ul>
       </li>
       <li class="admin-parent">
@@ -64,13 +64,13 @@
         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav1">
           <c:forEach items="${sessionScope.allusers }" 
 				var="i">
-		  <li id="${i }"><a href='touser?name=${i }'>${i }</a></li>
+		  <li id="${i }"><a>${i }</a></li>
 		  </c:forEach>
         </ul>
        </li>
       <li><a href="#"><span class="am-icon-sign-out"></span> 注销</a></li>
     </ul>
-
+	
     <div class="am-panel am-panel-default admin-sidebar-panel">
       <div class="am-panel-bd">
         <p><span class="am-icon-bookmark"></span> 公告</p>
@@ -136,7 +136,7 @@
 <![endif]-->
 
 <script type="text/javascript">
-
+var socket;
 $(function(){
 
 
@@ -149,11 +149,11 @@ $(function(){
             'link unlink | emotion image '
         ]
     });
-    
-    
+
     var nickname = "${sessionScope.username}";
-	var socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
-    //接收服务器的消息
+	socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
+ 
+    
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
     	if(obj.type == "normal"){
@@ -161,11 +161,11 @@ $(function(){
     	} else if(obj.type == "客服") {
     		var a = []
     	     $('#collapse-nav li a').each(function(){
-    	        a.push($(this).html())
+    	        a.push($(this).html())                                                     
     	    })
     		for (var i = 0; i<obj.onusers.length;i++){
     			if(inorin(obj.onusers[i],a) == false)
-    			$("#collapse-nav").append("<li id="+obj.onusers[i]+"><a href='touser?name="+obj.onusers[i]+"'>" + obj.onusers[i] +"</a></li>")
+    			$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] +"</a></li>")
     		}
     		var b = []
    	     $('#collapse-nav1 li a').each(function(){
@@ -177,9 +177,14 @@ $(function(){
    		}
     	} else if(obj.type == "offline") {
     		$("#collapse-nav li[id='"+obj.nickname+"']").remove();
-    		$("#collapse-nav1").append("<li id="+obj.nickname+"><a href='touse?name="+obj.nickname+"'>"+obj.nickname+"</a></li>")
+    		$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"</a></li>")
     	}
     }
+    
+   
+   
+    
+ 
     
     $("#send").click(function(){
     	if (!um.hasContents()) {  // 判断消息输入框是否为空
@@ -207,7 +212,26 @@ $(function(){
     
     });
 });
-
+$("#collapse-nav1 li").click(function(){
+	$("#collapse-nav1 li").css("background","");
+	$("#collapse-nav li").css("background","");
+	$(this).css("background","#00FFFF");
+	var obj = JSON.stringify({
+				type:"changename",
+			nickname:this.id,
+	});
+	socket.send(obj);
+});
+function ChangeSession(s){
+	$("#collapse-nav1 li").css("background","");
+	$("#collapse-nav li").css("background","");
+	$("#"+s.id).css("background","#00FFFF");
+	var obj = JSON.stringify({
+			type:"changename",
+		nickname:s.id,
+	});
+	socket.send(obj);
+}
 //判断元素是否属于集合
 function inorin(a,b) {
 	for(var i = 0; i < b.length; i++)
@@ -233,6 +257,16 @@ function addMessage(msg){
 }
 
 
+$("#collapse-nav li").click(function(){
+	
+	$(this).css("background","#00FFFF");
+	$(this).siblings().css("background","");
+	var obj = JSON.stringify({
+				type:"changename",
+			nickname:this.id,
+	});
+	socket.send(obj);
+});
 </script>
 
 </body>

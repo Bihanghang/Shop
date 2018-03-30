@@ -1,6 +1,7 @@
 package com.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,20 +9,58 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.alibaba.fastjson.JSON;
+
+
 @WebServlet("/touser")
 public class ToUser extends HttpServlet{
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doPost(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String name = req.getParameter("name");
-		String touser = "客服to"+name;
-		HttpSession session = req.getSession();
-		session.setAttribute("touser",touser);
-		req.getRequestDispatcher("adminTouser.jsp").forward(req, resp);
-	}
+	
+	public void doGet(HttpServletRequest request, HttpServletResponse response)  
+            throws ServletException, IOException {  
+  
+        retData(request, response, "GET");  
+    }  
+  
+    public void doPost(HttpServletRequest request, HttpServletResponse response)  
+            throws ServletException, IOException {  
+          
+        retData(request, response, "POST");  
+    }  
+  
+      
+    /** 
+     * 对请求提供返回数据 
+     * @param request 
+     * @param response 
+     * @param method 
+     * @return 
+     * @throws IOException 
+     */  
+    private void retData(HttpServletRequest request, HttpServletResponse response,String method) throws IOException{  
+    	
+    	HttpSession session = request.getSession();
+    	
+        //返回编码格式
+    	response.setCharacterEncoding("UTF-8");
+    	response.setContentType("application/json; charset=utf-8");
+    	
+    	//获取ajax参数并查询
+    	String username = request.getParameter("sessionname");
+  
+    	
+		//返回Json格式的判断结果
+    	String user = JSON.toJSONString(username);
+    	PrintWriter out = null;
+    	try {
+    	    out = response.getWriter();
+				out.write(user);
+    	} catch (IOException e) {
+    	    e.printStackTrace();
+    	} finally {
+    	    if (out != null) {
+    	        out.close();
+    	    }
+    	}
+    }  
 }
