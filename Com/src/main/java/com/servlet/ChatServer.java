@@ -51,7 +51,7 @@ public class ChatServer {
 		data.setType("客服");
 		JSONObject obj = JSONObject.fromObject(data);
 		for (ChatServer client : connections) {
-			if ("客服".equals(client.nickname)) 
+			if ("客服".equals(client.nickname) || client.nickname.indexOf("客服to") != -1) 
 				client.session.getAsyncRemote().sendText(obj.toString());
 		}
 		
@@ -91,7 +91,7 @@ public class ChatServer {
 		data.setNickname(this.nickname);
 		JSONObject obj = JSONObject.fromObject(data);
 		for (ChatServer client : connections) {
-			if ("客服".equals(client.nickname)) 
+			if ("客服".equals(client.nickname) || client.nickname.indexOf("客服to") != -1) 
 				client.session.getAsyncRemote().sendText(obj.toString());
 		}
 	}
@@ -109,7 +109,7 @@ public class ChatServer {
 		TransData transData = new TransData();
 		List<String> list = new ArrayList<>();
 		for (ChatServer client : connections) {
-			if (!"客服".equals(client.nickname)) 
+			if (!"客服".equals(client.nickname) && client.nickname.indexOf("客服to") == -1) 
 			list.add(client.nickname);
 		}
 		transData.setOnusers(list);

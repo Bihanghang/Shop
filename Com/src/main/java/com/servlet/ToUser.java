@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-@WebServlet("/loginServlet")
-public class Login extends HttpServlet{
+@WebServlet("/touser")
+public class ToUser extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,15 +18,10 @@ public class Login extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String username = req.getParameter("username");
+		String name = req.getParameter("name");
+		String touser = "客服to"+name;
 		HttpSession session = req.getSession();
-		session.setAttribute("username", username);
-		if (username.equals("客服")) {
-			req.getRequestDispatcher("adminlogin").forward(req, resp);
-		}else {
-			req.getRequestDispatcher("chatclient.jsp").forward(req, resp);
-		}
-	
+		session.setAttribute("touser",touser);
+		req.getRequestDispatcher("adminTouser.jsp").forward(req, resp);
 	}
-	
 }

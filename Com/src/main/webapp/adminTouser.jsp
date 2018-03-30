@@ -150,8 +150,9 @@ $(function(){
         ]
     });
     
-    
-    var nickname = "${sessionScope.username}";
+  
+    var nickname = "${sessionScope.touser}";
+    xuzhong(nickname.substring(4));
 	var socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
     //接收服务器的消息
     socket.onmessage=function(ev){
@@ -159,25 +160,25 @@ $(function(){
     	if(obj.type == "normal"){
     		addMessage(obj);
     	} else if(obj.type == "客服") {
-    		var a = []
+    		var OnlineAll = []
     	     $('#collapse-nav li a').each(function(){
-    	        a.push($(this).html())
+    	    	 OnlineAll.push($(this).html())
     	    })
     		for (var i = 0; i<obj.onusers.length;i++){
-    			if(inorin(obj.onusers[i],a) == false)
+    			if(inorin(obj.onusers[i],OnlineAll) == false)
     			$("#collapse-nav").append("<li id="+obj.onusers[i]+"><a href='touser?name="+obj.onusers[i]+"'>" + obj.onusers[i] +"</a></li>")
     		}
-    		var b = []
+    		var OfflineAll = []
    	     $('#collapse-nav1 li a').each(function(){
-   	        b.push($(this).html())
+   	    	OfflineAll.push($(this).html())
    	    })
    		for (var i = 0; i<obj.onusers.length;i++){
-   			if(inorin(obj.onusers[i],b) == true)
+   			if(inorin(obj.onusers[i],OfflineAll) == true)
    			 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
    		}
     	} else if(obj.type == "offline") {
     		$("#collapse-nav li[id='"+obj.nickname+"']").remove();
-    		$("#collapse-nav1").append("<li id="+obj.nickname+"><a href='touse?name="+obj.nickname+"'>"+obj.nickname+"</a></li>")
+    		$("#collapse-nav1").append("<li id="+obj.nickname+"><a href='touser?name="+obj.nickname+"'>"+obj.nickname+"</a></li>")
     	}
     }
     
@@ -194,7 +195,7 @@ $(function(){
         	//构建一个标准格式的JSON对象
         	var obj = JSON.stringify({
         			type:"normal",
-        		nickname:nickname,
+        		nickname:"客服",
 	    		content:txt
 	    	});
             // 发送消息
@@ -207,6 +208,13 @@ $(function(){
     
     });
 });
+
+//将选中用户变色
+function xuzhong(s){
+	$("#"+s).css("background","#00FFFF");
+	$("#"+s+" a").attr('href','javascript:void(0)');   
+    
+}
 
 //判断元素是否属于集合
 function inorin(a,b) {
