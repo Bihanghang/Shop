@@ -7,6 +7,8 @@ public class PushMess {
 	private String to_mess;
 	private String to_date;
 	private String to_user;
+	private boolean isSelf;
+	private String messtype;
 	public String getUser() {
 		return user;
 	}
@@ -31,10 +33,22 @@ public class PushMess {
 	public void setTo_user(String to_user) {
 		this.to_user = to_user;
 	}
+	public boolean isSelf() {
+		return isSelf;
+	}
+	public void setSelf(boolean isSelf) {
+		this.isSelf = isSelf;
+	}
+	public String getMesstype() {
+		return messtype;
+	}
+	public void setMesstype(String messtype) {
+		this.messtype = messtype;
+	}
 	@Override
 	public String toString() {
 		return "PushMess [user=" + user + ", to_mess=" + to_mess + ", to_date=" + to_date + ", to_user=" + to_user
-				+ "]";
+				+ ", isSelf=" + isSelf + ", messtype=" + messtype + "]";
 	}
 	
 	

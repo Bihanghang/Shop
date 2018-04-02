@@ -5,16 +5,18 @@ import java.util.List;
 public class TransData {
 	private String type;
 	private List<String> onusers;
+	private List<PushMess> kefumess;
 	private String nickname;   //返回的下线用户
 	
 	public TransData() {
 		
 	}
 
-	public TransData(String type, List<String> onusers, String nickname) {
+	public TransData(String type, List<String> onusers, List<PushMess> kefumess, String nickname) {
 		super();
 		this.type = type;
 		this.onusers = onusers;
+		this.kefumess = kefumess;
 		this.nickname = nickname;
 	}
 
@@ -34,6 +36,14 @@ public class TransData {
 		this.onusers = onusers;
 	}
 
+	public List<PushMess> getKefumess() {
+		return kefumess;
+	}
+
+	public void setKefumess(List<PushMess> kefumess) {
+		this.kefumess = kefumess;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -44,8 +54,7 @@ public class TransData {
 
 	@Override
 	public String toString() {
-		return "TransData [type=" + type + ", onusers=" + onusers + ", nickname=" + nickname + "]";
+		return "TransData [type=" + type + ", onusers=" + onusers + ", kefumess=" + kefumess + ", nickname=" + nickname
+				+ "]";
 	}
-	
-	
 }

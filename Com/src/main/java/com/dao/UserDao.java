@@ -76,4 +76,28 @@ public class UserDao {
 		}
 		return null;
 	}
+	
+	public List<String> GetAllUsersName(){
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<String> list = new ArrayList<>();
+		try {
+			con = DBUtils.getConnection();
+			String sql = "select user_name from user";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while ( rs.next() ){
+				String name = rs.getString("user_name");
+				list.add(name);
+			}
+			if (list != null) {
+				return list;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

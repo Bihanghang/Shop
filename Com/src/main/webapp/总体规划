@@ -1,0 +1,2 @@
+数据库：用户名称为’客服User'和'User',对应着客服端和用户端
+Session:每一个用户对应一个Session,客服对应着单独的一个Session并根据用户修改Session名称。

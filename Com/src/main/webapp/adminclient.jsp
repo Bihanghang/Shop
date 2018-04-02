@@ -156,35 +156,46 @@ $(function(){
     
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
-    	if(obj.type == "normal"){
+    	if(obj.type == "user" || obj.type == "客服user"){
     		addMessage(obj);
     	} else if(obj.type == "客服") {
-    		var a = []
+    		//获取客服端所有在线人数
+    		var OnLineUSers = []
     	     $('#collapse-nav li a').each(function(){
-    	        a.push($(this).html())                                                     
+    	    	 OnLineUSers.push($(this).html())                                                     
     	    })
+    	    //如果此用户并不包含，则添加
     		for (var i = 0; i<obj.onusers.length;i++){
-    			if(inorin(obj.onusers[i],a) == false)
+    			if(inorin(obj.onusers[i],OnLineUSers) == false)
     			$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] +"</a></li>")
     		}
-    		var b = []
+    		//获取客服端所有离线人数
+    		var OffLineUsers = []
    	     $('#collapse-nav1 li a').each(function(){
-   	        b.push($(this).html())
+   	    	OffLineUsers.push($(this).html())
    	    })
+   	    	//将此用户从离线列表删除。
    		for (var i = 0; i<obj.onusers.length;i++){
-   			if(inorin(obj.onusers[i],b) == true)
+   			if(inorin(obj.onusers[i],OffLineUsers) == true)
    			 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
    		}
+    		
+    		console.log(obj.UserKefu);
+    		for(var i=0; i<obj.UserKefu.length; i++){
+    			console.log(obj.UserKefu[i]);
+    			addMessages(obj.UserKefu[i]);
+    		}
     	} else if(obj.type == "offline") {
     		$("#collapse-nav li[id='"+obj.nickname+"']").remove();
     		$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"</a></li>")
+    	} else if(obj.type == "changename") {
+    		$("#chatContent li").css('display','none');
+    		for(var i=0; i<obj.usermessage.length; i++){
+    			console.log(obj.usermessage[i]);
+    			addMessages(obj.usermessage[i]);
+    		}
     	}
     }
-    
-   
-   
-    
- 
     
     $("#send").click(function(){
     	if (!um.hasContents()) {  // 判断消息输入框是否为空
@@ -198,7 +209,7 @@ $(function(){
         	var txt = um.getContent();
         	//构建一个标准格式的JSON对象
         	var obj = JSON.stringify({
-        			type:"normal",
+        			type:"客服user",
         		nickname:nickname,
 	    		content:txt
 	    	});
@@ -253,20 +264,23 @@ function addMessage(msg){
 	box.css((msg.isSelf? 'margin-right':'margin-left'),"40%");//外边距
 	
 	$("#ChatBox div:eq(0)").scrollTop(999999); 	//滚动条移动至最底部
-	
 }
 
+//人名nickname，时间date，是否自己isSelf，内容content
+function addMessages(msg){
 
-$("#collapse-nav li").click(function(){
-	
-	$(this).css("background","#00FFFF");
-	$(this).siblings().css("background","");
-	var obj = JSON.stringify({
-				type:"changename",
-			nickname:this.id,
-	});
-	socket.send(obj);
-});
+	var box = $("#msgtmp").clone(); 	//复制一份模板，取名为box
+	box.show();							//设置box状态为显示
+	box.appendTo("#chatContent");		//把box追加到聊天面板中
+	box.find('[ff="nickname"]').html(msg.user); //在box中设置昵称
+	box.find('[ff="msgdate"]').html(msg.to_date); 		//在box中设置时间
+	box.find('[ff="content"]').html(msg.to_mess); 	//在box中设置内容
+	box.addClass(msg.user == "客服"? '':'am-comment-flip');	//右侧显示
+	box.addClass(msg.user == "客服"? 'am-comment-warning':'am-comment-success');//颜色
+	box.css((msg.user == "客服"? 'margin-right':'margin-left'),"40%");//外边距
+	$("#ChatBox div:eq(0)").scrollTop(999999); 	//滚动条移动至最底部
+}
+
 </script>
 
 </body>

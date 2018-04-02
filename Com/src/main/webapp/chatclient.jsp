@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -54,6 +56,44 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="ChatBox" class="am-g am-g-fixed" >
 	  <div class="am-u-lg-12" style="height:400px;border:1px solid #999;overflow-y:scroll;">
 		<ul id="chatContent" class="am-comments-list am-comments-list-flip">
+			<!-- 遍历所有商品 -->
+			<c:forEach items="${sessionScope.User_to客服List }" 
+				var="i">
+			<c:choose>
+			<c:when test="${i.user == sessionScope.username}">
+				<li id="msgtmp2" class="am-comment">
+			    <a href="">
+			        <img class="am-comment-avatar" src="assets/images/other.jpg" alt=""/>
+			    </a>
+			    <div class="am-comment-main" >
+			        <header class="am-comment-hd">
+			            <div class="am-comment-meta">
+			              <a ff="nickname" href="#link-to-user" class="am-comment-author">${i.user }</a>
+			              <time ff="msgdate" datetime="" title="">${i.to_date }</time>
+			            </div>
+			        </header>
+			     <div ff="content" class="am-comment-bd">${i.to_mess }</div>
+			    </div>
+			</li>	
+			</c:when>
+			<c:otherwise>
+		 	<li id="msgtmp2" class="am-comment am-comment-flip">
+			    <a href="">
+			        <img class="am-comment-avatar" src="assets/images/other.jpg" alt=""/>
+			    </a>
+			    <div class="am-comment-main" >
+			        <header class="am-comment-hd">
+			            <div class="am-comment-meta">
+			              <a ff="nickname" href="#link-to-user" class="am-comment-author">${i.user }</a>
+			              <time ff="msgdate" datetime="" title="">${i.to_date }</time>
+			            </div>
+			        </header>
+			     <div ff="content" class="am-comment-bd">${i.to_mess }</div>
+			    </div>
+			</li>	
+			</c:otherwise>
+			</c:choose>
+			</c:forEach>
 			<li id="msgtmp" class="am-comment" style="display:none;">
 			    <a href="">
 			        <img class="am-comment-avatar" src="assets/images/other.jpg" alt=""/>
@@ -100,7 +140,7 @@ $(function(){
     //接收服务器的消息
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
-    	if(obj.type == "normal"){
+    	if(obj.type == "user" || obj.type == "客服user"){
     		addMessage(obj);
     	} 
     	
@@ -118,7 +158,7 @@ $(function(){
         	var txt = um.getContent();
         	//构建一个标准格式的JSON对象
         	var obj = JSON.stringify({
-	    			type:"normal",
+	    			type:"user",
         		nickname:nickname,
 	    		content:txt
 	    	});
