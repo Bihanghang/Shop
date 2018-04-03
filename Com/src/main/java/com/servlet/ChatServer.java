@@ -66,68 +66,17 @@ public class ChatServer {
 	@OnMessage
 	public void onMessage(String message,Session session){
 		JSONObject obj = JSONObject.fromObject(message);
-		System.out.println("obj"+obj);
 		//如果这个session名字是"客服"并且消息是从客服端发出
 		if( "客服".equals(this.nickname) && "客服user".equals(obj.get("type"))){
-			obj.put("date", df.format(new Date()));
-			obj.put("isSelf","true");
-			UserDao Userdao = new UserDao();
-			MessageDao Messdao = new MessageDao();
-			List<String> AllUserNames = Userdao.GetAllUsersName();
-			for(String name : AllUserNames){
-				PushMess pushMess = new PushMess();
-				pushMess.setUser("客服");
-				pushMess.setTo_user(name);
-				pushMess.setSelf(obj.getBoolean("isSelf"));
-				pushMess.setTo_date(obj.getString("date"));
-				pushMess.setTo_mess(obj.getString("content"));
-				pushMess.setMesstype("ToAll");
-				Messdao.PushMessage(pushMess);
-			}	//保存客服端向所有用户发送的信息
-			//向所有人广播客服发出消息
-			System.out.println(obj);
-			for (ChatServer client : connections) {
-				client.session.getAsyncRemote().sendText(obj.toString());
-			}
+			SaveAllMess(obj);//保存客服端向所有用户发送的信息
 		} else if ("changename".equals(obj.get("type"))) {
 			String nickname = (String) obj.get("nickname");
 			if (!nickname.equals(this.nickname)) {
 				this.nickname = nickname;
-				SelectUserMess(obj);//查询点击用户的所有会话存入Json
-				session.getAsyncRemote().sendText(obj.toString());
+				SelectUserMess(obj,session);//查询点击用户的所有会话存入Json
 			}
 		}else {
-			obj.put("date", df.format(new Date()));
-			for (ChatServer client : connections) {
-				obj.put("isSelf", client.session.equals(session));
-				if (client.nickname.equals(this.nickname)) {
-					if ("user".equals(obj.get("type")) && client.session.equals(this.session)) {
-						System.out.println("userGet!");
-						System.out.println(obj.toString());
-						PushMess pushMess = new PushMess();
-						pushMess.setUser(obj.getString("nickname"));
-						pushMess.setTo_user("客服");
-						pushMess.setSelf(obj.getBoolean("isSelf"));
-						pushMess.setTo_date(obj.getString("date"));
-						pushMess.setTo_mess(obj.getString("content")); 
-						MessageDao dao = new MessageDao();
-						dao.PushMessage(pushMess);
-					}else if( "客服user".equals(obj.get("type")) && client.session.equals(this.session)){
-						System.out.println("客服UserGet!");
-						System.out.println(obj.toString());
-						PushMess pushMess = new PushMess();
-						pushMess.setUser(obj.getString("nickname"));
-						pushMess.setTo_user(this.nickname);
-						pushMess.setSelf(obj.getBoolean("isSelf"));
-						pushMess.setTo_date(obj.getString("date"));
-						pushMess.setTo_mess(obj.getString("content"));
-						System.out.println(pushMess);
-						MessageDao dao = new MessageDao();
-						dao.PushMessage(pushMess);
-					}
-					client.session.getAsyncRemote().sendText(obj.toString());
-				}
-			}
+			SaveMess(obj);
 		}
 		
 	}
@@ -187,7 +136,7 @@ public class ChatServer {
 		}
 	}
 	//查询与点击用户的所有会话存入Json
-	public void SelectUserMess(JSONObject obj) {
+	public void SelectUserMess(JSONObject obj,Session session) {
 		MessageDao dao = new MessageDao();
 		List<PushMess> list1 = new ArrayList<>();
 		list1 = dao.GetUser(nickname);
@@ -203,6 +152,7 @@ public class ChatServer {
         });
 		//返回选中用户的对话信息
 		obj.put("usermessage", User_to客服List);
+		session.getAsyncRemote().sendText(obj.toString());
 	}
 	//保存客服端向所有用户发送的信息
 	public void SaveAllMess(JSONObject obj){
@@ -220,6 +170,9 @@ public class ChatServer {
 			pushMess.setTo_mess(obj.getString("content"));
 			pushMess.setMesstype("ToAll");
 			Messdao.PushMessage(pushMess);
+		}
+		for (ChatServer client : connections) {
+			client.session.getAsyncRemote().sendText(obj.toString());
 		}
 	}
 	
