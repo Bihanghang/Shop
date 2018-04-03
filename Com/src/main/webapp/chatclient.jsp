@@ -126,7 +126,7 @@ $(function(){
 
 	//实例化编辑器
     var um = UM.getEditor('myEditor',{
-    	initialContent:"请输入聊天信息...",
+    	initialContent:"Hello,World!",
     	autoHeightEnabled:false,
     	toolbar:[
     		'| fontfamily fontsize' ,
@@ -140,6 +140,7 @@ $(function(){
     //接收服务器的消息
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
+    	//分成user与客服user是为了区分消息的方向
     	if(obj.type == "user" || obj.type == "客服user"){
     		addMessage(obj);
     	} 
@@ -187,9 +188,9 @@ function addMessage(msg){
 	box.find('[ff="nickname"]').html(msg.nickname); //在box中设置昵称
 	box.find('[ff="msgdate"]').html(msg.date); 		//在box中设置时间
 	box.find('[ff="content"]').html(msg.content); 	//在box中设置内容
-	box.addClass(msg.isSelf? '':'am-comment-flip');	//右侧显示
-	box.addClass(msg.isSelf? 'am-comment-warning':'am-comment-success');//颜色
-	box.css((msg.isSelf? 'margin-right':'margin-left'),"40%");//外边距
+	box.addClass(msg.nickname == "客服" ? 'am-comment-flip':'');	//右侧显示
+	box.addClass(msg.nickname == "客服" ? 'am-comment-warning':'am-comment-success');//颜色
+	box.css((msg.nickname == "客服" ? 'margin-left':'margin-right'),"40%");//外边距
 	
 	$("#ChatBox div:eq(0)").scrollTop(999999); 	//滚动条移动至最底部
 	

@@ -142,7 +142,7 @@ $(function(){
 
 	//实例化编辑器
     var um = UM.getEditor('myEditor',{
-    	initialContent:"请输入聊天信息...",
+    	initialContent:"Hello,World!",
     	autoHeightEnabled:false,
     	toolbar:[
     		'| fontfamily fontsize' ,
@@ -153,45 +153,25 @@ $(function(){
     var nickname = "${sessionScope.username}";
 	socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
  
-    
+    //获取服务器传过来的消息
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
+    	//分成user与客服user是为了区分消息的方向
     	if(obj.type == "user" || obj.type == "客服user"){
     		addMessage(obj);
     	} else if(obj.type == "客服") {
-    		//获取客服端所有在线人数
-    		var OnLineUSers = []
-    	     $('#collapse-nav li a').each(function(){
-    	    	 OnLineUSers.push($(this).html())                                                     
-    	    })
-    	    //如果此用户并不包含，则添加
-    		for (var i = 0; i<obj.onusers.length;i++){
-    			if(inorin(obj.onusers[i],OnLineUSers) == false)
-    			$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] +"</a></li>")
-    		}
-    		//获取客服端所有离线人数
-    		var OffLineUsers = []
-   	     $('#collapse-nav1 li a').each(function(){
-   	    	OffLineUsers.push($(this).html())
-   	    })
-   	    	//将此用户从离线列表删除。
-   		for (var i = 0; i<obj.onusers.length;i++){
-   			if(inorin(obj.onusers[i],OffLineUsers) == true)
-   			 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
-   		}
-    		
-    		console.log(obj.UserKefu);
-    		for(var i=0; i<obj.UserKefu.length; i++){
-    			console.log(obj.UserKefu[i]);
-    			addMessages(obj.UserKefu[i]);
+    		UserlineConsole(obj);
+    		//服务器向所有人发送的信息
+    		if(obj.客服Type == "客服"){
+    			for(var i=0; i<obj.UserKefu.length; i++){
+    				addMessages(obj.UserKefu[i]);
+    			}
     		}
     	} else if(obj.type == "offline") {
-    		$("#collapse-nav li[id='"+obj.nickname+"']").remove();
-    		$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"</a></li>")
+    		UserOffLine(obj);
     	} else if(obj.type == "changename") {
     		$("#chatContent li").css('display','none');
     		for(var i=0; i<obj.usermessage.length; i++){
-    			console.log(obj.usermessage[i]);
     			addMessages(obj.usermessage[i]);
     		}
     	}
@@ -223,6 +203,38 @@ $(function(){
     
     });
 });
+
+//单一用户下线控制
+function UserOffLine(obj){
+	$("#collapse-nav li[id='"+obj.nickname+"']").remove();
+	$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"</a></li>")
+}
+
+//客服端的在线与下线人数控制
+function UserlineConsole(obj){
+	//获取客服端所有在线人数
+	var OnLineUSers = []
+	
+     $('#collapse-nav li a').each(function(){
+    	 OnLineUSers.push($(this).html())                                                     
+    })
+    //如果此用户并不包含，则添加
+	for (var i = 0; i<obj.onusers.length;i++){
+		if(inorin(obj.onusers[i],OnLineUSers) == false)
+		$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] +"</a></li>")
+	}
+	//获取客服端所有离线人数
+	var OffLineUsers = []
+    $('#collapse-nav1 li a').each(function(){
+   	OffLineUsers.push($(this).html())
+   })
+   	//将此用户从离线列表删除。
+	for (var i = 0; i<obj.onusers.length;i++){
+		if(inorin(obj.onusers[i],OffLineUsers) == true)
+		 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
+	}
+}
+
 $("#collapse-nav1 li").click(function(){
 	$("#collapse-nav1 li").css("background","");
 	$("#collapse-nav li").css("background","");
