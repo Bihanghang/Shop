@@ -43,6 +43,7 @@ public class Login extends HttpServlet{
 			session.setAttribute("allusers", allusers);
 			req.getRequestDispatcher("/adminclient.jsp").forward(req, resp);
 		}else {
+			
 			MessageDao dao = new MessageDao();
 			List<PushMess> list1 = new ArrayList<>();
 			list1 = dao.GetUser(username);

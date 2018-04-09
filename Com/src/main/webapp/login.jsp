@@ -10,6 +10,7 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   
     <link rel="stylesheet" href="css/style.css">
 
     <style type="text/css">
@@ -46,10 +47,9 @@
             <div class="form-horizontal col-md-offset-3" id="login_form">
                 <h3 class="form-title">LOGIN</h3>
                 <div class="col-md-9">
-                    <form class="form-group" action="loginServlet">
                     <div class="form-group">
                         <i class="fa fa-user fa-lg"></i>
-                        <input class="form-control required" type="text" placeholder="Username" id="username" name="username" autofocus="autofocus" maxlength="20"/>
+                        <input class="form-control required" type="text" placeholder="请输入手机号" id="phone" name="phone" autofocus="autofocus" maxlength="20"/>
                     </div>
                     <div class="form-group">
                             <i class="fa fa-lock fa-lg"></i>
@@ -61,12 +61,32 @@
                         </label>
                     </div>
                     <div class="form-group col-md-offset-9">
-                        <button type="submit" class="btn btn-success pull-right" name="submit">登录</button>
+                        <button class="btn btn-success pull-right" name="submit" id="login">登录</button>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 </body>
+<script>
+
+$("#login").click(function(){
+	$.post("loginServlet.do",{
+   	 	 		password:$("#password").val(),
+   	 	 		phone:$("#phone").val(),
+    		},
+    		function(data){
+    			if(data =="success"){
+    				 window.location.href = '/Com/indexServlet';
+    		　　　　　　}else if(data == "fail"){
+    					alert("密码错误！");
+    		　　　　　　}else if(data == "notexit"){
+    					alert("用户不存在！");
+    		　　　　　     }else if(data == "kefu"){
+    					 window.location.href = '/Com/kefuLogin';
+    		　　　　　　}
+    		});
+	 });
+
+</script>
 </html>

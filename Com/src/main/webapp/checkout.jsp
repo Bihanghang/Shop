@@ -5,11 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="/Com/"> 
-<title>Home</title>
-<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Checkout</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!--jQuery(necessary for Bootstrap's JavaScript plugins)-->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -30,20 +26,55 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--dropdown-->
 <script src="js/jquery.easydropdown.js"></script>		
 <script>
-var p = function(x,y){
-		$.post("cartServlet",{
-	 	 		itemId:x,
-	 	 		Unit_Price:y,
-		},
+var Zero = function(){
+	$.post("cartdelete",
 		function(data){
-			if(data == "notlogin") {
-				alert("请登陆！")
-			}else{
-				alert("添加成功")
+			if(data == "success"){
+				$(".simpleCart").html('¥0.0')
+				window.location.reload()
 			}
-		});
+	});
+	var cart = $(".close2")
+	for(var i = 0; i < cart.length; i++){
+			var lang = "#cart";
+			lang = lang + cart[i].id;
+			$(lang).fadeOut('slow', function(c){
+				$(lang).remove();
+			});
+		}
 }
-</script>	
+
+var plus = function(itemid){
+	    console.log(itemid)
+	    $.post("plusminus",{
+	    	itemid:itemid,
+	    	type:"plustype",
+	    },
+	    		function(data){
+	    			if(data == "success"){
+	    				window.location.reload()
+	    			}
+	    	});
+}
+
+	//点击减少按钮触发事件
+var minus = function(itemid){
+	$.post("plusminus",{
+    	itemid:itemid,
+    	type:"minustype",
+    },
+    		function(data){
+    			if(data == "success"){
+    				window.location.reload()
+    			}
+    	});
+	}
+</script>		
+<style type="text/css">
+		.num strong{
+   		 padding: 0 20px;
+		}
+	</style>
 </head>
 <body> 
 	<!--top-header-->
@@ -53,10 +84,7 @@ var p = function(x,y){
 				<div class="col-md-6 top-header-left">
 					<div class="drop">
 						<div class="box">
-							<a href="login.jsp" id="startlogin">${user_phone == null ?'登录':user_name }</a>
-						</div>
-						<div class="box1" id="test">
-							<a href="indexServlet"> 注册</a>						
+							<a href="login.jsp" id="startlogin"><span>${user_name }</span></a>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -64,11 +92,11 @@ var p = function(x,y){
 				<div class="col-md-6 top-header-left">
 					<div class="cart box_1">
 						<a href="checkoutServlet">
-							 <div class="total">
-								</div>
+							<div class="total">
+								<span class="simpleCart">¥${sessionScope.CartTotal }</span></div>
 								<img src="images/cart-1.png" alt="" />
 						</a>
-						<p style="color:white">购物车</p>
+						<p><a href="javascript:void(0)" onclick="Zero()" class="simpleCart_e">Empty Cart</a></p>
 						<div class="clearfix"> </div>
 					</div>
 				</div>
@@ -77,12 +105,6 @@ var p = function(x,y){
 		</div>
 	</div>
 	<!--top-header-->
-	
-	<!--start-logo-->
-	<div class="logo">
-		<a href="indexServlet"><h1 id="huluwa">萨斯给</h1></a>
-	</div>
-	<!--start-logo-->
 	<!--bottom-header-->
 	<div class="header-bottom">
 		<div class="container">
@@ -90,7 +112,6 @@ var p = function(x,y){
 				<div class="col-md-9 header-left">
 				<div class="top-nav">
 					<ul class="memenu skyblue"><li class="active"><a href="indexServlet">Home</a></li>
-						
 						<li class="grid"><a href="#">分类</a>
 							<div class="mepanel">
 								<div class="row">
@@ -129,7 +150,7 @@ var p = function(x,y){
 			</div>
 			<div class="col-md-3 header-right"> 
 				<div class="search-bar">
-					<input type="text" value="Search" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}">
+					<input type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
 					<input type="submit" value="">
 				</div>
 			</div>
@@ -138,117 +159,83 @@ var p = function(x,y){
 		</div>
 	</div>
 	<!--bottom-header-->
-	<!--banner-starts-->
-	<div class="bnr" id="home">
-		<div  id="top" class="callbacks_container">
-			<ul class="rslides" id="slider4">
-			    <li>
-					<div class="banner">
-					</div>
-				</li>
-				<li>
-					<div class="banner1">
-					</div>
-				</li>
-				<li>
-					<div class="banner2">
-					</div>
-				</li>
-			</ul>
+	<!--start-breadcrumbs-->
+	<div class="breadcrumbs">
+		<div class="container">
+			<div class="breadcrumbs-main">
+				<ol class="breadcrumb">
+					<li><a href="indexServlet">Home</a></li>
+					<li class="active">Checkout</li>
+				</ol>
+			</div>
 		</div>
-		<div class="clearfix"> </div>
 	</div>
-	<!--banner-ends--> 
-    
-	<!--Slider-Starts-Here-->
-				<script src="js/responsiveslides.min.js"></script>
-			 <script>
-			    // You can also use "$(window).load(function() {"
-			    $(function () {
-			      // Slideshow 4
-			      $("#slider4").responsiveSlides({
-			        auto: true,
-			        pager: true,
-			        nav: true,
-			        speed: 500,
-			        namespace: "callbacks",
-			        before: function () {
-			          $('.events').append("<li>before event fired.</li>");
-			        },
-			        after: function () {
-			          $('.events').append("<li>after event fired.</li>");
-			        }
-			      });
+	<!--end-breadcrumbs-->
+	<!--start-ckeckout-->
+	<div class="ckeckout">
+		<div class="container">
+			<div class="ckeckout-top">
+			<div class="cart-items">
+			 <h3>My Shopping Bag (3)</h3>
+				<script>/* $(document).ready(function(c) {
+					$('.close2').on('click', function(c){
+						$('.cart-header').fadeOut('slow', function(c){
+							$('.cart-header').remove();
+						});
+						});	  
+					});  */
+					function g(itemid) {
+						
+						$.post("cartdelete",{
+								itemid:itemid,
+								},
+								function(data){
+									if(data == "success"){
+										var cart = $(".close2")
+										for(var i = 0; i < cart.length; i++){
+											if(cart[i].id == itemid) {
+												var lang = "#cart";
+												lang = lang + itemid;
+												$(lang).fadeOut('slow', function(c){
+													$(lang).remove();
+												});
+											}
+										}
+										window.location.reload()
+									}
+							});
+					}
+			   </script>
 			
-			    });
-			  </script>
-			<!--End-slider-script-->
-	<!--about-starts-->
-    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" >手机网站模板</a></div>
-	<div class="about"> 
-		<div class="container">
-			<div class="about-top grid-1">
-				<div class="col-md-4 about-left">
-					<figure class="effect-bubba">
-						<img class="img-responsive" src="images/abt-1.jpg" alt=""/>
-						<figcaption>
-							<h2>阿丽亚陶</h2>
-							<p>是大陆军方</p>	
-						</figcaption>			
-					</figure>
-				</div>
-				<div class="col-md-4 about-left">
-					<figure class="effect-bubba">
-						<img class="img-responsive" src="images/abt-2.jpg" alt=""/>
-						<figcaption>
-							<h4>Mauris erat augue</h4>
-							<p>In sit amet sapien eros Integer dolore magna aliqua</p>	
-						</figcaption>			
-					</figure>
-				</div>
-				<div class="col-md-4 about-left">
-					<figure class="effect-bubba">
-						<img class="img-responsive" src="images/abt-3.jpg" alt=""/>
-						<figcaption>
-							<h4>Cras elit mauris</h4>
-							<p>In sit amet sapien eros Integer dolore magna aliqua</p>	
-						</figcaption>			
-					</figure>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-		</div>
-	</div>
-	<!--about-end-->
-	<!--product-starts-->
-	<div class="product"> 
-		<div class="container">
-			<div class="product-top">
-				<div class="product-one">
-					<!-- 遍历所有商品 -->
-					<c:forEach items="${sessionScope.products }" 
+				
+			<div class="in-check" >
+				<ul class="unit">
+					<li><span>Item</span></li>
+					<li><span>Product Name</span></li>		
+					<li><span>Unit Price</span></li>
+					<li><span>Number</span></li>
+					<div class="clearfix"> </div>
+				</ul>
+				<c:forEach items="${sessionScope.cartplusnum }" 
 							var="i">
-						<div class="col-md-3 product-left">
-						<div class="product-main simpleCart_shelfItem">
-							<a href="single.html" class="mask"><img class="img-responsive zoom-img" src="images/${i.item }.png" alt="" /></a>
-							<div class="product-bottom">
-								<h3>${i.product_name }</h3>
-								<p>${i.delivery_details }</p>
-								<h4><a href="javascript:void(0)" class="item_add" onclick="p(${i.itemid },${i.unit_price })"><i></i></a> <span class=" item_price">$ ${i.unit_price }</span></h4>
-							</div>
-							<div class="srch">
-								<span>-${i.discount*10 }%</span>
-							</div>
-						</div>
-						</div>
-					</c:forEach>
-					<div class="clearfix"></div>
-				</div>					
+						<ul class="cart-header" id="cart${i.product.itemid }">
+							<div class="close2" onclick='g(this.id)' id ="${i.product.itemid }"> </div>
+								<li class="ring-in"><a href="single.html" ><img src="images/${i.product.item }.png" class="img-responsive" alt=""></a>
+								</li>
+								<li><span class="name">${i.product.product_name }</span></li>
+								<li><span class="cost">¥${i.product.unit_price*i.num }</span></li>
+								<li><span><div class="num"><img onclick='minus(${i.product.itemid })' class="minus" src="img/minus.png" /><strong id="strong">${i.num }</strong><img onclick='plus(${i.product.itemid })' class="plus" src="img/plus.png"></div></span></li>
+							<div class="clearfix"> </div>
+						</ul>
+				</c:forEach>
+				
 			</div>
+			</div>  
+		 </div>
 		</div>
 	</div>
-	<!--product-end-->
-	
+	<!--end-ckeckout-->
+
 	<!--footer-starts-->
 	<div class="footer">
 		<div class="container">
@@ -266,5 +253,3 @@ var p = function(x,y){
 	<!--footer-end-->	
 </body>
 </html>
-
-

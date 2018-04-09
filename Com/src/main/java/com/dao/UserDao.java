@@ -3,6 +3,7 @@ package com.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +15,15 @@ import com.jdbc.DBUtils;
 
 public class UserDao {
 	
-	public User UserSearch(String name) {
+	public User UserSearch(String phone) {
 		ResultSet rs = null;
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
 			con = DBUtils.getConnection();
-			String sql = "select *from user where user_name = ?";
+			String sql = "select *from user where user_phone = ?";
 			ps = con.prepareStatement(sql);
-			ps.setString(1, name);
+			ps.setString(1, phone);
 			rs = ps.executeQuery();
 			User user = new User();
 			while ( rs.next() ){
@@ -41,6 +42,15 @@ public class UserDao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -73,6 +83,15 @@ public class UserDao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -97,6 +116,15 @@ public class UserDao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

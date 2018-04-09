@@ -150,7 +150,7 @@ $(function(){
         ]
     });
 
-    var nickname = "${sessionScope.username}";
+    var nickname = "客服";
 	socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
  
     //获取服务器传过来的消息

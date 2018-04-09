@@ -78,7 +78,6 @@ public class ChatServer {
 		}else {
 			SaveMess(obj);
 		}
-		
 	}
 	
 	/**
