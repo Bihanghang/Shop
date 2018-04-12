@@ -118,7 +118,7 @@ var s = function(){
 function(data){
 	console.log("nihao")
 	console.log(data)
-	window.location.href="single.jsp";
+	window.location.href="display.jsp";
 });
 }
 

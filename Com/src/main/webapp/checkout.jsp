@@ -12,6 +12,14 @@
 <!--Custom-Theme-files-->
 <!--theme-style-->
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />	
+<style type="text/css">
+		.num strong{
+   		 padding: 0 20px;
+		}
+		.blue{background:rgb(242,45,0);}
+		.red{background:red;}
+		
+</style>
 <!--//theme-style-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -104,16 +112,33 @@ var s = function(){
 function(data){
 	console.log("nihao")
 	console.log(data)
-	window.location.href="single.jsp";
+	window.location.href="display.jsp";
 });
 }
 
+var Single = function(x){
+	$.post("singleServlet",{
+			pro_id:x,
+	},
+	function(data){
+		console.log(data);
+		window.location.href="single.jsp";
+	});
+}
+
+$(document).ready(function() { 
+	$("#js").hover(function() { 
+	// $("#orderedlist li:last").hover(function() { 
+		console.log("nihao")
+	$(this).removeClass("red"); 
+	$(this).addClass("blue"); 
+	}, function() { 
+	$(this).removeClass("blue"); 
+	$(this).addClass("red"); 
+	}); 
+	}); 
 </script>		
-<style type="text/css">
-		.num strong{
-   		 padding: 0 20px;
-		}
-	</style>
+
 </head>
 <body> 
 	<!--top-header-->
@@ -259,7 +284,7 @@ function(data){
 							var="i">
 						<ul class="cart-header" id="cart${i.product.pro_id }">
 							<div class="close2" onclick='g(this.id)' id ="${i.product.pro_id }"> </div>
-								<li class="ring-in"><a href="single.jsp" ><img src="images/${i.product.pro_photo }.png" class="img-responsive" alt=""></a>
+								<li class="ring-in"><a href="single.jsp" onclick="Single(${i.product.pro_id })"><img src="images/${i.product.pro_photo }.png" class="img-responsive" alt=""></a>
 								</li>
 								<li><span class="name">${i.product.pro_name }</span></li>
 								<li><span class="cost">¥${i.product.pro_price*i.num }</span></li>
@@ -268,6 +293,15 @@ function(data){
 						</ul>
 				</c:forEach>
 				
+			</div>
+			<div class="in-check" >
+				<ul class="unit" style="border:none";>
+					<li><span></span></li>
+					<li><span></span></li>		
+					<li style=" text-align:center;padding:10px;"><span>合计():¥<strong style="font-size:27px;">${sessionScope.CartTotal }</strong> </span></li>
+					<li id="js" style="text-align:center;padding:10px;" class="red"><span><a href="javascript:void(0)" style="color:red;cursor:pointer;font-size:24px;color:white;text-decoration:none;">结算( )</a></span></li>
+					<div class="clearfix"> </div>
+				</ul>
 			</div>
 			</div>  
 		 </div>

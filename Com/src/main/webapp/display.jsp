@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Single</title>
+<title>Display</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!--jQuery(necessary for Bootstrap's JavaScript plugins)-->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -207,7 +207,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="breadcrumbs-main">
 				<ol class="breadcrumb">
 					<li><a href="index.html">Home</a></li>
-					<li class="active">Single</li>
+					<li class="active">Display</li>
 				</ol>
 			</div>
 		</div>
@@ -217,79 +217,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<div class="single contact">
 		<div class="container">
 			<div class="single-main">
-				<div class="col-md-9 single-main-left">
+				<div class="col-md-9 single-main-left"  style="positon:relative;top:-27px;">
 				<div class="sngl-top">
-					<div class="col-md-5 single-top-left">	
-						<div class="flexslider">
-							  <ul class="slides">
-								<li data-thumb="images/${sessionScope.PhotoDescribe0==null?'p-5': sessionScope.PhotoDescribe0 }.png">
-									<div class="thumb-image"> <img src="images/${sessionScope.PhotoDescribe0==null?'p-5': sessionScope.PhotoDescribe0}.png" data-imagezoom="true" class="img-responsive" alt=""/> </div>
-								</li>
-								<li data-thumb="images/${sessionScope.PhotoDescribe1==null?'p-6': sessionScope.PhotoDescribe1 }.png">
-									 <div class="thumb-image"> <img src="images/${sessionScope.PhotoDescribe1==null?'p-6': sessionScope.PhotoDescribe1 }.png" data-imagezoom="true" class="img-responsive" alt=""/> </div>
-								</li>
-								<li data-thumb="images/${sessionScope.PhotoDescribe2==null?'p-7': sessionScope.PhotoDescribe2 }.png">
-								   <div class="thumb-image"> <img src="images/${sessionScope.PhotoDescribe2==null?'p-7': sessionScope.PhotoDescribe2 }.png" data-imagezoom="true" class="img-responsive" alt=""/> </div>
-								</li> 
-							  </ul>
-						</div>
-						<!-- FlexSlider -->
-						<script src="js/imagezoom.js"></script>
-						<script defer src="js/jquery.flexslider.js"></script>
-						<link rel="stylesheet" href="css/flexslider.css" type="text/css" media="screen" />
-
-						<script>
-						// Can also be used with $(document).ready()
-						$(window).load(function() {
-						  $('.flexslider').flexslider({
-							animation: "slide",
-							controlNav: "thumbnails"
-						  });
-						});
-						</script>
-					</div>	
-					<div class="col-md-7 single-top-right">
-						<div class="single-para simpleCart_shelfItem">
-						<h2>${sessionScope.Single.pro_name }</h2>
-							<div class="star-on">
-							<div class="clearfix"> </div>
-							</div>
-							
-							<h5 class="item_price">¥${sessionScope.Single.pro_price }</h5>
-							<p>${sessionScope.Single.pro_describe }</p>
-							<div class="available">
-								<ul>
-									<li>Color
-										<select>
-										<option>${sessionScope.Single.pro_color }</option>
-										<option>Black</option>
-										<option>Dark Black</option>
-										<option>Red</option>
-									</select></li>
-								<li class="size-in">Size<select>
-									<option>${sessionScope.Single.pro_size }</option>
-									<option>Medium</option>
-									<option>small</option>
-									<option>Large</option>
-									<option>small</option>
-								</select></li>
-								<div class="clearfix"> </div>
-							</ul>
-						</div>
-							<ul class="tag-men">
-								<li><span>TAG</span>
-								<span class="women1">: ${sessionScope.Single.pro_brand }</span></li>
-								<li><span>SKU</span>
-								<span class="women1">: CK09</span></li>
-							</ul>
-								<a href="#" class="add-cart item_add">ADD TO CART</a>
-							
-						</div>
-					</div>
-					<div class="clearfix"> </div>
+					
 				</div>
 				
-				<div class="latestproducts">
 					<div class="product-one">
 						<div class="col-md-4 product-left p-left"> 
 							<div class="product-main simpleCart_shelfItem">
@@ -317,7 +249,23 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								</div>
 							</div>
 						</div>
-					
+						<!-- 遍历所有商品 -->
+					<c:forEach items="${sessionScope.SearchResult }" 
+							var="i">
+						<div class="col-md-4 product-left p-left">
+						<div class="product-main simpleCart_shelfItem">
+							<a href="javascript:void(0)" class="mask" onclick="Single(${i.pro_id })"> <img class="img-responsive zoom-img" src="images/${i.pro_photo }.png" alt="" /></a>
+							<div class="product-bottom">
+								<h3>${i.pro_name }</h3>
+								<p>${i.pro_describe }</p>
+								<h4><a href="javascript:void(0)" class="item_add" onclick="Verify(${i.pro_id },${i.pro_price })"><i></i></a> <span class=" item_price">$ ${i.pro_price }</span></h4>
+							</div>
+							<div class="srch">
+								<span>-${i.pro_discount*10 }%</span>
+							</div>
+						</div>
+						</div>
+					</c:forEach>
 						<div class="col-md-4 product-left p-left"> 
 							<div class="product-main simpleCart_shelfItem">
 								<a href="single.html" class="mask"><img class="img-responsive zoom-img" src="images/p-3.png" alt="" /></a>
@@ -336,7 +284,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 			</div>
 				<div class="col-md-3 single-right">
-					<div class="w_sidebar">
 						<section  class="sky-form">
 							<h4>Catogories</h4>
 							<div class="row1 scroll-pane">
