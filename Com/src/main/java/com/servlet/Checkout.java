@@ -36,7 +36,7 @@ public class Checkout extends HttpServlet{
 			cartId = dao.GetItemid(phone);
 			for(Integer i:cartId){
 				CartPlusNum cartPlusNum = new CartPlusNum();
-				cartPlusNum.setProduct(dao2.ProductSearchByItemId(i));
+				cartPlusNum.setProduct(dao2.ProductSearchByPro_id(i));
 				cartPlusNum.setNum(dao.GetNum(phone, i));
 				cartplusnum.add(cartPlusNum);
 			}

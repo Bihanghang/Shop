@@ -60,7 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<c:forEach items="${sessionScope.User_to客服List }" 
 				var="i">
 			<c:choose>
-			<c:when test="${i.user == sessionScope.username}">
+			<c:when test="${i.user == sessionScope.user_name}">
 				<li id="msgtmp2" class="am-comment">
 			    <a href="">
 			        <img class="am-comment-avatar" src="assets/images/other.jpg" alt=""/>
@@ -135,7 +135,7 @@ $(function(){
     });
     
     
-    var nickname = "${sessionScope.username}";
+    var nickname = "${sessionScope.user_name}";
 	var socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
     //接收服务器的消息
     socket.onmessage=function(ev){

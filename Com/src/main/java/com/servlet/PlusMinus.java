@@ -52,9 +52,6 @@ public class PlusMinus extends HttpServlet{
     	String user_phone = (String) session.getAttribute("user_phone");    
     	String itemid = request.getParameter("itemid");
     	String type = request.getParameter("type");
-    	System.out.println(itemid);
-    	System.out.println(user_phone);
-    	System.out.println(type);
     	List<CartPlusNum> cartplusnum = new ArrayList<>();
     	if (user_phone != null && "plustype".equals(type)){
     		CartDao dao = new CartDao();
@@ -66,11 +63,10 @@ public class PlusMinus extends HttpServlet{
 			cartId = dao.GetItemid(user_phone);
 			for(Integer i:cartId){
 				CartPlusNum cartPlusNum = new CartPlusNum();
-				cartPlusNum.setProduct(dao2.ProductSearchByItemId(i));
+				cartPlusNum.setProduct(dao2.ProductSearchByPro_id(i));
 				cartPlusNum.setNum(dao.GetNum(user_phone, i));
 				cartplusnum.add(cartPlusNum);
 			}
-			System.out.println(cartplusnum);
 			session.setAttribute("cartplusnum", cartplusnum);
 			
 			List<Integer> cartitem = new ArrayList<>();
@@ -96,7 +92,6 @@ public class PlusMinus extends HttpServlet{
     	} else if (user_phone != null && "minustype".equals(type)) {
     		CartDao dao = new CartDao();
     		int num = dao.GetNum(user_phone, Integer.parseInt(itemid));
-    		System.out.println("num"+num);
     		if (num > 1) {
     			dao.DecreaseOne(user_phone, Integer.parseInt(itemid), num);
         		
@@ -105,11 +100,10 @@ public class PlusMinus extends HttpServlet{
     			cartId = dao.GetItemid(user_phone);
     			for(Integer i:cartId){
     				CartPlusNum cartPlusNum = new CartPlusNum();
-    				cartPlusNum.setProduct(dao2.ProductSearchByItemId(i));
+    				cartPlusNum.setProduct(dao2.ProductSearchByPro_id(i));
     				cartPlusNum.setNum(dao.GetNum(user_phone, i));
     				cartplusnum.add(cartPlusNum);
     			}
-    			System.out.println(cartplusnum);
     			session.setAttribute("cartplusnum", cartplusnum);
     			
     			List<Integer> cartitem = new ArrayList<>();

@@ -69,6 +69,45 @@ var minus = function(itemid){
     			}
     	});
 	}
+
+var s = function(){
+	console.log($("#sea").val())
+	var GoodName = $("#sea").val();
+	var Discount = [];
+	var Catogories = [];
+	var Color = [];
+	var Size = [];
+            $.each($('input:checkbox:checked'),function(){
+            		if( $(this).val().indexOf("Catogories") != -1 )
+            			Catogories.push( $(this).val() );
+            		else if( $(this).val().indexOf("Color") != -1 )
+            			Color.push( $(this).val() );
+            		else if( $(this).val().indexOf("Size") != -1 )
+            			Size.push( $(this).val() );
+            });
+            $.each($('input:radio:checked'),function(){
+            	 Discount.push( $(this).val() );
+            });
+    console.log(Discount,Catogories,Color,Size)
+    var Discount_json = JSON.stringify(Discount);
+    var Catogories_json = JSON.stringify(Catogories);
+    var Color_json = JSON.stringify(Color);
+    var Size_json = JSON.stringify(Size);
+    var Pro_json = JSON.stringify(GoodName);
+    $.post("searchServlet",{
+    	  Pro_name:Pro_json,
+    	  Discount:Discount_json,
+    	Catogories:Catogories_json,
+    		 Color:Color_json,
+    		  Size:Size_json,
+},
+function(data){
+	console.log("nihao")
+	console.log(data)
+	window.location.href="single.jsp";
+});
+}
+
 </script>		
 <style type="text/css">
 		.num strong{
@@ -150,8 +189,8 @@ var minus = function(itemid){
 			</div>
 			<div class="col-md-3 header-right"> 
 				<div class="search-bar">
-					<input type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}">
-					<input type="submit" value="">
+					<input id= "sea" type="text" value="请输入商品名" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '请输入商品名';}">
+					<input type="submit" value="" onclick='s()'>
 				</div>
 			</div>
 			<div class="clearfix"> </div>
@@ -218,13 +257,13 @@ var minus = function(itemid){
 				</ul>
 				<c:forEach items="${sessionScope.cartplusnum }" 
 							var="i">
-						<ul class="cart-header" id="cart${i.product.itemid }">
-							<div class="close2" onclick='g(this.id)' id ="${i.product.itemid }"> </div>
-								<li class="ring-in"><a href="single.html" ><img src="images/${i.product.item }.png" class="img-responsive" alt=""></a>
+						<ul class="cart-header" id="cart${i.product.pro_id }">
+							<div class="close2" onclick='g(this.id)' id ="${i.product.pro_id }"> </div>
+								<li class="ring-in"><a href="single.jsp" ><img src="images/${i.product.pro_photo }.png" class="img-responsive" alt=""></a>
 								</li>
-								<li><span class="name">${i.product.product_name }</span></li>
-								<li><span class="cost">¥${i.product.unit_price*i.num }</span></li>
-								<li><span><div class="num"><img onclick='minus(${i.product.itemid })' class="minus" src="img/minus.png" /><strong id="strong">${i.num }</strong><img onclick='plus(${i.product.itemid })' class="plus" src="img/plus.png"></div></span></li>
+								<li><span class="name">${i.product.pro_name }</span></li>
+								<li><span class="cost">¥${i.product.pro_price*i.num }</span></li>
+								<li><span><div class="num"><img onclick='minus(${i.product.pro_id })' class="minus" src="img/minus.png" /><strong id="strong">${i.num }</strong><img onclick='plus(${i.product.pro_id })' class="plus" src="img/plus.png"></div></span></li>
 							<div class="clearfix"> </div>
 						</ul>
 				</c:forEach>

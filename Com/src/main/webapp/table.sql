@@ -31,3 +31,8 @@ create table message(
 );
  insert into user (user_name,user_password,user_sex,user_addr,user_phone,
  user_birth,user_jifen,user_touxiang) values("葫芦娃","456",'男','广东','159','97-10-23',100,'lk');
+ 
+ insert into product(pro_name,pro_brand,pro_size,pro_color,pro_discount,pro_classify,pro_price,pro_photo,pro_describe) 
+ 					values('进化手表',' Watch','Medium','Black',5,'四星',400.0,'p-7','explore now');
+ 
+ 

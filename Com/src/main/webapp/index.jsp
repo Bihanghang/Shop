@@ -16,6 +16,7 @@
 <!--Custom-Theme-files-->
 <!--theme-style-->
 <link href="css/style.css" rel="stylesheet" type="text/css" media="all" />	
+<link rel="stylesheet" href="css/styleCe.css" type="text/css" />
 <!--//theme-style-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -30,7 +31,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--dropdown-->
 <script src="js/jquery.easydropdown.js"></script>		
 <script>
-var p = function(x,y){
+var Verify = function(x,y){
 		$.post("cartServlet",{
 	 	 		itemId:x,
 	 	 		Unit_Price:y,
@@ -42,6 +43,95 @@ var p = function(x,y){
 				alert("添加成功")
 			}
 		});
+}
+
+var Single = function(x){
+	$.post("singleServlet",{
+			pro_id:x,
+	},
+	function(data){
+		console.log(data);
+		window.location.href="single.jsp";
+	});
+}
+
+
+$(document).ready(function(){
+
+
+
+	$(".side ul li").hover(function(){
+
+		$(this).find(".sidebox").stop().animate({"width":"124px"},200).css({"opacity":"1","filter":"Alpha(opacity=100)","background":"#ae1c1c"})	
+
+	},function(){
+
+		$(this).find(".sidebox").stop().animate({"width":"54px"},200).css({"opacity":"0.8","filter":"Alpha(opacity=80)","background":"#000"})	
+
+	});
+
+	
+
+});
+
+
+
+//回到顶部
+
+function goTop(){
+
+	$('html,body').animate({'scrollTop':0},600);
+
+}
+
+var s = function(){
+	console.log($("#sea").val())
+	var GoodName = $("#sea").val();
+	var Discount = [];
+	var Catogories = [];
+	var Color = [];
+	var Size = [];
+            $.each($('input:checkbox:checked'),function(){
+            		if( $(this).val().indexOf("Catogories") != -1 )
+            			Catogories.push( $(this).val() );
+            		else if( $(this).val().indexOf("Color") != -1 )
+            			Color.push( $(this).val() );
+            		else if( $(this).val().indexOf("Size") != -1 )
+            			Size.push( $(this).val() );
+            });
+            $.each($('input:radio:checked'),function(){
+            	 Discount.push( $(this).val() );
+            });
+    console.log(Discount,Catogories,Color,Size)
+    var Discount_json = JSON.stringify(Discount);
+    var Catogories_json = JSON.stringify(Catogories);
+    var Color_json = JSON.stringify(Color);
+    var Size_json = JSON.stringify(Size);
+    var Pro_json = JSON.stringify(GoodName);
+    $.post("searchServlet",{
+    	  Pro_name:Pro_json,
+    	  Discount:Discount_json,
+    	Catogories:Catogories_json,
+    		 Color:Color_json,
+    		  Size:Size_json,
+},
+function(data){
+	console.log("nihao")
+	console.log(data)
+	window.location.href="single.jsp";
+});
+}
+
+
+var Client = function(){
+	$.post("clientServlet",
+function(data){
+	if(data == "logined"){
+		window.location.href="chatclient.jsp";
+	}else{
+		alert("请登陆");
+	}
+});
 }
 </script>	
 </head>
@@ -129,8 +219,8 @@ var p = function(x,y){
 			</div>
 			<div class="col-md-3 header-right"> 
 				<div class="search-bar">
-					<input type="text" value="Search" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}">
-					<input type="submit" value="">
+					<input id= "sea" type="text" value="请输入商品名" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '请输入商品名';}">
+					<input type="submit" value="" onclick='s()'>
 				</div>
 			</div>
 			<div class="clearfix"> </div>
@@ -230,14 +320,14 @@ var p = function(x,y){
 							var="i">
 						<div class="col-md-3 product-left">
 						<div class="product-main simpleCart_shelfItem">
-							<a href="single.html" class="mask"><img class="img-responsive zoom-img" src="images/${i.item }.png" alt="" /></a>
+							<a href="javascript:void(0)" class="mask" onclick="Single(${i.pro_id })"> <img class="img-responsive zoom-img" src="images/${i.pro_photo }.png" alt="" /></a>
 							<div class="product-bottom">
-								<h3>${i.product_name }</h3>
-								<p>${i.delivery_details }</p>
-								<h4><a href="javascript:void(0)" class="item_add" onclick="p(${i.itemid },${i.unit_price })"><i></i></a> <span class=" item_price">$ ${i.unit_price }</span></h4>
+								<h3>${i.pro_name }</h3>
+								<p>${i.pro_describe }</p>
+								<h4><a href="javascript:void(0)" class="item_add" onclick="Verify(${i.pro_id },${i.pro_price })"><i></i></a> <span class=" item_price">$ ${i.pro_price }</span></h4>
 							</div>
 							<div class="srch">
-								<span>-${i.discount*10 }%</span>
+								<span>-${i.pro_discount*10 }%</span>
 							</div>
 						</div>
 						</div>
@@ -264,6 +354,19 @@ var p = function(x,y){
 		</div>
 	</div>
 	<!--footer-end-->	
+	<div class="side">
+
+	<ul>
+
+		<li onclick='Client()'><a href="javascript:void(0);" ><div class="sidebox"><img src="img/side_icon04.png">客服</div></a></li>
+
+		<li><a href="checkoutServlet" ><div class="sidebox"><img src="img/cc.jpg">&nbsp;&nbsp;&nbsp;&nbsp;购物车</div></a></li>
+
+		<li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="img/side_icon05.png"></a></li>
+
+	</ul>
+
+</div>
 </body>
 </html>
 
