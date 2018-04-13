@@ -9,6 +9,7 @@ public class PushMess {
 	private String to_user;
 	private boolean isSelf;
 	private String messtype;
+	private String linetype;
 	public String getUser() {
 		return user;
 	}
@@ -45,10 +46,16 @@ public class PushMess {
 	public void setMesstype(String messtype) {
 		this.messtype = messtype;
 	}
+	public String getLinetype() {
+		return linetype;
+	}
+	public void setLinetype(String linetype) {
+		this.linetype = linetype;
+	}
 	@Override
 	public String toString() {
 		return "PushMess [user=" + user + ", to_mess=" + to_mess + ", to_date=" + to_date + ", to_user=" + to_user
-				+ ", isSelf=" + isSelf + ", messtype=" + messtype + "]";
+				+ ", isSelf=" + isSelf + ", messtype=" + messtype + ", linetype=" + linetype + "]";
 	}
 	
 	

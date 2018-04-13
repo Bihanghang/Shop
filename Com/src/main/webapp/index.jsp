@@ -70,9 +70,20 @@ $(document).ready(function(){
 
 	});
 
-	
+	setInterval(function(){
+		$.post("checkoffline",
+				function(data){
+					if(data == "noMess"){
+						console.log("没有消息")
+					}else{
+						console.log("data",data);
+						$("#kefuimg").attr("src","img/side_icon05.png");
+						$("#kefuNum").text(data+"条未读");
+					}
+				});
+		},3000)
 
-});
+	});
 
 
 
@@ -358,11 +369,11 @@ function(data){
 
 	<ul>
 
-		<li onclick='Client()'><a href="javascript:void(0);" ><div class="sidebox"><img src="img/side_icon04.png">客服</div></a></li>
+		<li onclick='Client()'><a href="javascript:void(0);" ><div class="sidebox"><img id="kefuimg" src="img/side_icon04.png"><span id="kefuNum">客服</span></div></a></li>
 
 		<li><a href="checkoutServlet" ><div class="sidebox"><img src="img/cc.jpg">&nbsp;&nbsp;&nbsp;&nbsp;购物车</div></a></li>
 
-		<li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="img/side_icon05.png"></a></li>
+		<li><a href="javascript:goTop();" class="sidetop"><img src="img/side_icon05.png"></a></li>
 
 	</ul>
 

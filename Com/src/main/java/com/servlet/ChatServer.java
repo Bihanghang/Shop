@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -120,9 +121,19 @@ public class ChatServer {
 				}else if( "客服user".equals(obj.get("type")) && client.session.equals(this.session)){
 					System.out.println("客服UserGet!");
 					System.out.println(obj.toString());
+					Map<String, Integer> map = new HashMap<>();
 					PushMess pushMess = new PushMess();
 					pushMess.setUser(obj.getString("nickname"));
 					pushMess.setTo_user(this.nickname);
+					
+					List<String> allusers = new ArrayList<>();
+					allusers = GetAllUsers();
+					map = DetectLine(allusers);
+					if (map.get(this.nickname) == 1) {
+						pushMess.setLinetype("offline");
+					} else if (map.get(this.nickname) == 2) {
+						pushMess.setLinetype("online");
+					}
 					pushMess.setSelf(obj.getBoolean("isSelf"));
 					pushMess.setTo_date(obj.getString("date"));
 					pushMess.setTo_mess(obj.getString("content"));
@@ -213,6 +224,40 @@ public class ChatServer {
 		}
 		transData.setOnusers(list);
 		return transData;
+	}
+	
+	//返回所有在线用户包括客服本身对客户的映射
+	public List<String> GetAllUsers(){
+		List<String> list = new ArrayList<>();
+		for (ChatServer client : connections) {
+			if (!"客服".equals(client.nickname) )
+				list.add(client.nickname);
+		}
+		return list;
+	}
+	//检测用户是否在线，在线置为2，不在设为1
+	public Map<String, Integer> DetectLine(List<String> list){
+		Map<String, Integer> map = new HashMap<>();
+		List<String> list2 = new ArrayList<>();
+		if ( !list.isEmpty() ) {
+			for(String s : list){
+				if (inorin(s, list2)) {
+					map.put(s, 2);
+				}else {
+					map.put(s, 1);
+				}
+				list2.add(s);
+			}
+		}
+		return map;
+	}
+	
+	//判断元素是否属于集合
+	public boolean inorin(String a,List<String> b) {
+		for(int i = 0; i < b.size(); i++)
+			if ( a.equals(b.get(i)))
+				return true;
+				return false;
 	}
 }
 

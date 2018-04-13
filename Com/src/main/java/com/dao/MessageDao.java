@@ -20,7 +20,7 @@ public class MessageDao {
 		PreparedStatement ps = null;
 		try {
 			con = DBUtils.getConnection();
-			String sql = "insert into message (user,to_mess,to_date,to_user,isself,messtype) values(?,?,?,?,?,?)";
+			String sql = "insert into message (user,to_mess,to_date,to_user,isself,messtype,linetype) values(?,?,?,?,?,?,?)";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, pushMess.getUser());
 			ps.setString(2, pushMess.getTo_mess());
@@ -28,6 +28,7 @@ public class MessageDao {
 			ps.setString(4, pushMess.getTo_user());
 			ps.setInt(5, pushMess.isSelf()? 1:0);
 			ps.setString(6, pushMess.getMesstype());
+			ps.setString(7, pushMess.getLinetype());
 			ps.execute();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -62,6 +63,7 @@ public class MessageDao {
 				pushMess.setTo_mess(rs.getString("to_mess"));
 				pushMess.setUser(rs.getString("user"));
 				pushMess.setSelf(rs.getInt("isSelf") == 1 ? true:false);
+				pushMess.setLinetype(rs.getString("linetype"));
 				pushMesses.add(pushMess);
 			}
 			if (pushMesses != null) {
@@ -106,6 +108,7 @@ public class MessageDao {
 				pushMess.setTo_mess(rs.getString("to_mess"));
 				pushMess.setUser(rs.getString("user"));
 				pushMess.setSelf(rs.getInt("isSelf") == 1 ? true:false);
+				pushMess.setLinetype(rs.getString("linetype"));
 				pushMesses.add(pushMess);
 			}
 			if (pushMesses != null) {
@@ -148,6 +151,7 @@ public class MessageDao {
 				pushMess.setTo_mess(rs.getString("to_mess"));
 				pushMess.setUser(rs.getString("user"));
 				pushMess.setSelf(rs.getInt("isSelf") == 1 ? true:false);
+				pushMess.setLinetype(rs.getString("linetype"));
 				pushMesses.add(pushMess);
 			}
 			if (pushMesses != null) {
@@ -168,5 +172,65 @@ public class MessageDao {
 			}
 		}
 		return null;
+	}
+	
+	
+	//查找向下线客户发送信息的条数
+	public int OfflineNumbers(){
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		int num = 0;
+		try {
+			con = DBUtils.getConnection();
+			String sql = "select count(*) from message where linetype='offline'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				num = rs.getInt("count(*)");
+			}
+			if (num != 0) {
+				return num;
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
+	//修改客服向下线用户发送消息种类为online
+	public void ChangeOffToOn(String to_user){
+		Connection con = null;
+		PreparedStatement ps = null;
+		int num = 0;
+		try {
+			con = DBUtils.getConnection();
+			String sql = "update message set linetype='online' where to_user=?";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, to_user);
+			ps.execute();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

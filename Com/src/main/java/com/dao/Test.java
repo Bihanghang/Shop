@@ -1,10 +1,13 @@
 package com.dao;
 
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Test {
 	public static void main(String[] args) {
-		String string = "nihao,ni,laksj";
-		System.out.println(string.split(",")[0]);
+		MessageDao dao = new MessageDao();
+		System.out.println(dao.OfflineNumbers());
 	}
 }
