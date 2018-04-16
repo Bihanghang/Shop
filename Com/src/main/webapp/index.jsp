@@ -71,7 +71,9 @@ $(document).ready(function(){
 	});
 
 	setInterval(function(){
-		$.post("checkoffline",
+		$.post("checkoffline",{
+				username:"${sessionScope.user_name}",
+				},
 				function(data){
 					if(data == "noMess"){
 						console.log("没有消息")

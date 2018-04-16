@@ -174,17 +174,120 @@ public class MessageDao {
 		return null;
 	}
 	
+	//查找所有向下线客服发送的用户
+	public List<String> UsersToOfflineKefu(){
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<String> list = new ArrayList<>();
+		try {
+			con = DBUtils.getConnection();
+			String sql = "select user from message where linetype='offline' and to_user='客服'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				list.add(rs.getString("user"));
+			}
+			if (list != null) {
+				return list;
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				ps.close();
+				con.close();
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 	
+	//查找向下线客服发送信息的条数
+		public int OfflineNumbersToKefu(String name){
+			ResultSet rs = null;
+			Connection con = null;
+			PreparedStatement ps = null;
+			int num = 0;
+			try {
+				con = DBUtils.getConnection();
+				String sql = "select count(*) from message where linetype='offline' and user=?";
+				ps = con.prepareStatement(sql);
+				ps.setString(1, name);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					num = rs.getInt("count(*)");
+				}
+				if (num != 0) {
+					return num;
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				try {
+					ps.close();
+					con.close();
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return 0;
+		}
+	
+		//查找向下线客服发送信息的总条数
+				public int AllOfflineNumbersToKefu(){
+					ResultSet rs = null;
+					Connection con = null;
+					PreparedStatement ps = null;
+					int num = 0;
+					try {
+						con = DBUtils.getConnection();
+						String sql = "select count(*) from message where linetype='offline' and to_user='客服'";
+						ps = con.prepareStatement(sql);
+						rs = ps.executeQuery();
+						while(rs.next()) {
+							num = rs.getInt("count(*)");
+						}
+						if (num != 0) {
+							return num;
+						}
+						
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}finally{
+						try {
+							ps.close();
+							con.close();
+							rs.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					return 0;
+				}
+			
 	//查找向下线客户发送信息的条数
-	public int OfflineNumbers(){
+	public int OfflineNumbers(String name){
 		ResultSet rs = null;
 		Connection con = null;
 		PreparedStatement ps = null;
 		int num = 0;
 		try {
 			con = DBUtils.getConnection();
-			String sql = "select count(*) from message where linetype='offline'";
+			String sql = "select count(*) from message where linetype='offline' and to_user=?";
 			ps = con.prepareStatement(sql);
+			ps.setString(1, name);
 			rs = ps.executeQuery();
 			while(rs.next()) {
 				num = rs.getInt("count(*)");
@@ -233,4 +336,29 @@ public class MessageDao {
 			}
 		}
 	}
+	
+	//修改下线用户向客服发送消息种类为online
+		public void ChangeOffToOnKefu(String user){
+			Connection con = null;
+			PreparedStatement ps = null;
+			int num = 0;
+			try {
+				con = DBUtils.getConnection();
+				String sql = "update message set linetype='online' where user=? ";
+				ps = con.prepareStatement(sql);
+				ps.setString(1, user);
+				ps.execute();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally{
+				try {
+					ps.close();
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 }

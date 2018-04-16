@@ -3,7 +3,9 @@ package com.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +23,8 @@ import com.dao.ProductDao;
 import com.dao.UserDao;
 
 
-@WebServlet("/checkoffline")
-public class CheckOffline extends HttpServlet{
+@WebServlet("/checkofflinekefu")
+public class CheckOfflineKefu extends HttpServlet{
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)  
             throws ServletException, IOException {  
@@ -53,25 +55,24 @@ public class CheckOffline extends HttpServlet{
     	response.setCharacterEncoding("UTF-8");
     	response.setContentType("application/json; charset=utf-8");
     	
-    	String username = request.getParameter("username");
     	
     	//查询客服向下线客户发送信息的条数
-    	int num = 0;
-    	MessageDao dao = new MessageDao();
-    	num = dao.OfflineNumbers(username);
     	
+    	Map<String, Integer> map = new HashMap<>();
+    	MessageDao dao = new MessageDao();
+    	List<String> AllToOfflineKefuUsers = new ArrayList<>();
+    	AllToOfflineKefuUsers = dao.UsersToOfflineKefu();
+    	for(String user:AllToOfflineKefuUsers) {
+    		map.put(user, dao.OfflineNumbersToKefu(user));
+    	}
     	//返回Json格式的判断结果
     	String noMess=JSON.toJSONString("noMess");
-    	String numJson=JSON.toJSONString(num);
+    	String mapnum = JSON.toJSONString(map);
     	
     	PrintWriter out = null;
     	try {
     	    out = response.getWriter();
-    	    if (num >= 1) {
-        	    out.write(numJson);
-			} else {
-				out.write(noMess);
-			}
+    	    out.write(mapnum);
     	    
     	} catch (IOException e) {
     	    e.printStackTrace();

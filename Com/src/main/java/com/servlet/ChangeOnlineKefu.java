@@ -3,7 +3,9 @@ package com.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +22,11 @@ import com.dao.MessageDao;
 import com.dao.ProductDao;
 import com.dao.UserDao;
 
+import net.sf.json.JSONObject;
 
-@WebServlet("/checkoffline")
-public class CheckOffline extends HttpServlet{
+
+@WebServlet("/changeonlinekefu")
+public class ChangeOnlineKefu extends HttpServlet{
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)  
             throws ServletException, IOException {  
@@ -47,31 +51,29 @@ public class CheckOffline extends HttpServlet{
      */  
     private void retData(HttpServletRequest request, HttpServletResponse response,String method) throws IOException{  
     	
-    	HttpSession session = request.getSession();
+    
     	
         //返回编码格式
     	response.setCharacterEncoding("UTF-8");
     	response.setContentType("application/json; charset=utf-8");
     	
-    	String username = request.getParameter("username");
     	
     	//查询客服向下线客户发送信息的条数
-    	int num = 0;
-    	MessageDao dao = new MessageDao();
-    	num = dao.OfflineNumbers(username);
     	
-    	//返回Json格式的判断结果
-    	String noMess=JSON.toJSONString("noMess");
-    	String numJson=JSON.toJSONString(num);
+    	String user = request.getParameter("user");
+    	System.out.println("suree"+user);
+    	MessageDao dao = new MessageDao();
+    	dao.ChangeOffToOnKefu(user);
+    	JSONObject JSONObj = JSONObject.fromObject("{}");
+    	
+    	int num = dao.AllOfflineNumbersToKefu();
+    	JSONObj.put("num", num);
+    	JSONObj.put("user", user);
     	
     	PrintWriter out = null;
     	try {
     	    out = response.getWriter();
-    	    if (num >= 1) {
-        	    out.write(numJson);
-			} else {
-				out.write(noMess);
-			}
+    	    out.write(JSONObj.toString());
     	    
     	} catch (IOException e) {
     	    e.printStackTrace();

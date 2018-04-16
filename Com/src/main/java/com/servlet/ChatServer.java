@@ -110,8 +110,17 @@ public class ChatServer {
 				if ("user".equals(obj.get("type")) && client.session.equals(this.session)) {
 					System.out.println("userGet!");
 					System.out.println(obj.toString());
+					Map<String, Integer> map = new HashMap<>();
 					PushMess pushMess = new PushMess();
 					pushMess.setUser(obj.getString("nickname"));
+					List<String> allusers = new ArrayList<>();
+					allusers = GetAllUsers();
+					map = DetectLine(allusers);
+					if (map.get(this.nickname) == 1) {
+						pushMess.setLinetype("offline");
+					} else if (map.get(this.nickname) == 2) {
+						pushMess.setLinetype("online");
+					}
 					pushMess.setTo_user("客服");
 					pushMess.setSelf(obj.getBoolean("isSelf"));
 					pushMess.setTo_date(obj.getString("date"));
@@ -197,6 +206,7 @@ public class ChatServer {
 				client.session.getAsyncRemote().sendText(obj.toString());
 		}
 	}
+	
 	//向客服端发送在线人数以及客服端向所有人发送的信息
 	public void TransToKefu(){
 		TransData data = GetOnUsers();
@@ -211,6 +221,7 @@ public class ChatServer {
 				client.session.getAsyncRemote().sendText(obj.toString());
 			}
 		}
+		
 	}
 	
 	

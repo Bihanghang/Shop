@@ -42,7 +42,7 @@
   <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
 
     <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
-      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+      <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning" id="KefuSum"></span></a></li>
     </ul>
   </div>
 </header>
@@ -64,7 +64,7 @@
         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav1">
           <c:forEach items="${sessionScope.allusers }" 
 				var="i">
-		  <li id="${i }"><a>${i }</a></li>
+		  <li id="${i }"><a>${i }<span class="am-badge am-badge-secondary am-margin-right am-fr"></span></a></li>
 		  </c:forEach>
         </ul>
        </li>
@@ -200,14 +200,50 @@ $(function(){
             // 消息输入框获取焦点
             um.focus();
         }
-    
     });
+    
+    $.post("checkofflinekefu",
+				function(data){
+    					var sum = 0;
+	    				for(var k in data) {
+	    	   			 	//遍历对象，k即为key，data[k]为当前k对应的值
+	    	   			 	var username = k+" a span";
+	    	   			 	$("#"+username).text(data[k]);
+	    	   			 	sum += parseInt(data[k]);
+	    				}
+	    				$("#KefuSum").text(sum);
+				});
+    
+    setInterval(function(){
+    	 $.post("checkofflinekefu",
+ 				function(data){
+    					var sum = 0;
+ 	    				for(var k in data) {
+ 	    	   			 	//遍历对象，k即为key，data[k]为当前k对应的值
+ 	    	   			 	var username = k+" a span";
+ 	    	   			 	$("#"+username).text(data[k]);
+ 	    	   				sum += parseInt(data[k]);
+ 	    				}
+ 	    				$("#KefuSum").text(sum);
+ 				});
+    	},6000);
 });
 
 //单一用户下线控制
 function UserOffLine(obj){
 	$("#collapse-nav li[id='"+obj.nickname+"']").remove();
-	$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"</a></li>")
+	$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"<span class='am-badge am-badge-secondary am-margin-right am-fr'></span></a></li>")
+	$.post("checkofflinekefu",
+				function(data){
+						var sum = 0;
+	    				for(var k in data) {
+	    	   			 	//遍历对象，k即为key，data[k]为当前k对应的值
+	    	   			 	var username = k+" a span";
+	    	   			 	$("#"+username).text(data[k]);
+	    	   				sum += parseInt(data[k]);
+	    				}
+	    				$("#KefuSum").text(sum);
+	});
 }
 
 //客服端的在线与下线人数控制
@@ -216,17 +252,29 @@ function UserlineConsole(obj){
 	var OnLineUSers = []
 	
      $('#collapse-nav li a').each(function(){
-    	 OnLineUSers.push($(this).html())                                                     
+    	 OnLineUSers.push($(this).html().split("<")[0])                                                     
     })
     //如果此用户并不包含，则添加
 	for (var i = 0; i<obj.onusers.length;i++){
+				
 		if(inorin(obj.onusers[i],OnLineUSers) == false)
-		$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] +"</a></li>")
+		$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] + "<span class='am-badge am-badge-secondary am-margin-right am-fr'></span></a></li>")
+		$.post("checkofflinekefu",
+				function(data){
+					var sum = 0;
+					for(var k in data) {
+   			 			//遍历对象，k即为key，data[k]为当前k对应的值
+   					 	var username = k+" a span";
+   			 			$("#"+username).text(data[k]);
+   						sum += parseInt(data[k]);
+					}
+					$("#KefuSum").text(sum);
+		});
 	}
 	//获取客服端所有离线人数
 	var OffLineUsers = []
     $('#collapse-nav1 li a').each(function(){
-   	OffLineUsers.push($(this).html())
+   		OffLineUsers.push($(this).html().split("<")[0])
    })
    	//将此用户从离线列表删除。
 	for (var i = 0; i<obj.onusers.length;i++){
@@ -244,6 +292,15 @@ $("#collapse-nav1 li").click(function(){
 			nickname:this.id,
 	});
 	socket.send(obj);
+	$.post("changeonlinekefu",{
+			user:this.id,
+			},
+			function(data){
+				var username = data.user+" a span";
+		 		$("#"+username).text("");
+				$("#KefuSum").text(data.num);
+	});
+	
 });
 function ChangeSession(s){
 	$("#collapse-nav1 li").css("background","");
@@ -254,6 +311,14 @@ function ChangeSession(s){
 		nickname:s.id,
 	});
 	socket.send(obj);
+	$.post("changeonlinekefu",{
+			user:s.id,
+			},
+			function(data){
+				var username = data.user+" a span";
+	 			$("#"+username).text("");
+				$("#KefuSum").text(data.num);
+	});
 }
 //判断元素是否属于集合
 function inorin(a,b) {
