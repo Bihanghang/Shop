@@ -139,7 +139,6 @@
 var socket;
 $(function(){
 
-
 	//实例化编辑器
     var um = UM.getEditor('myEditor',{
     	initialContent:"Hello,World!",
@@ -153,6 +152,8 @@ $(function(){
     var nickname = "客服";
 	socket = new WebSocket("ws://${pageContext.request.getServerName()}:${pageContext.request.getServerPort()}${pageContext.request.contextPath}/chatserver/"+nickname);
  
+	
+	
     //获取服务器传过来的消息
     socket.onmessage=function(ev){
     	var obj = eval(   '('+ev.data+')'   );
@@ -231,8 +232,18 @@ $(function(){
 
 //单一用户下线控制
 function UserOffLine(obj){
+	//存放选中用户
+	var Color = [];
+	
+	//获取选中用户
+    $('#collapse-nav li').each(function(){
+   	 if( $(this).css('background-color') != "rgb(255, 255, 255)")
+   		 Color[this.id] = true;
+   })
 	$("#collapse-nav li[id='"+obj.nickname+"']").remove();
 	$("#collapse-nav1").append("<li id="+obj.nickname+" onclick='ChangeSession("+obj.nickname+")'><a>"+obj.nickname+"<span class='am-badge am-badge-secondary am-margin-right am-fr'></span></a></li>")
+	if(Color[obj.nickname] == true)
+				$("#"+obj.nickname).css("background","#00FFFF");	
 	$.post("checkofflinekefu",
 				function(data){
 						var sum = 0;
@@ -248,6 +259,28 @@ function UserOffLine(obj){
 
 //客服端的在线与下线人数控制
 function UserlineConsole(obj){
+	//存放选中用户
+	var Color = [];
+	
+	
+	//获取客服端所有离线人数
+	var OffLineUsers = []
+    $('#collapse-nav1 li a').each(function(){
+   		OffLineUsers.push($(this).html().split("<")[0])
+    })
+    //获取选中用户
+     $('#collapse-nav1 li').each(function(){
+    	 if( $(this).css('background-color') != "rgb(255, 255, 255)")
+    		 Color[this.id] = true;
+    })
+   	
+   	//将此用户从离线列表删除。
+	for (var i = 0; i<obj.onusers.length;i++){
+		if(inorin(obj.onusers[i],OffLineUsers) == true){
+		 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
+		}
+	}
+	
 	//获取客服端所有在线人数
 	var OnLineUSers = []
 	
@@ -257,8 +290,11 @@ function UserlineConsole(obj){
     //如果此用户并不包含，则添加
 	for (var i = 0; i<obj.onusers.length;i++){
 				
-		if(inorin(obj.onusers[i],OnLineUSers) == false)
-		$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] + "<span class='am-badge am-badge-secondary am-margin-right am-fr'></span></a></li>")
+		if(inorin(obj.onusers[i],OnLineUSers) == false){
+			$("#collapse-nav").append("<li id='"+obj.onusers[i]+"' onclick='ChangeSession("+obj.onusers[i]+")'><a>" + obj.onusers[i] + "<span class='am-badge am-badge-secondary am-margin-right am-fr'></span></a></li>");
+			if(Color[obj.onusers[i]] == true)
+				$("#"+obj.onusers[i]).css("background","#00FFFF");
+		}
 		$.post("checkofflinekefu",
 				function(data){
 					var sum = 0;
@@ -271,16 +307,7 @@ function UserlineConsole(obj){
 					$("#KefuSum").text(sum);
 		});
 	}
-	//获取客服端所有离线人数
-	var OffLineUsers = []
-    $('#collapse-nav1 li a').each(function(){
-   		OffLineUsers.push($(this).html().split("<")[0])
-   })
-   	//将此用户从离线列表删除。
-	for (var i = 0; i<obj.onusers.length;i++){
-		if(inorin(obj.onusers[i],OffLineUsers) == true)
-		 $("#collapse-nav1 li[id='"+obj.onusers[i]+"']").remove(); 
-	}
+	
 }
 
 $("#collapse-nav1 li").click(function(){

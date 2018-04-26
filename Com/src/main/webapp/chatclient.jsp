@@ -172,11 +172,7 @@ $(function(){
         }
     
     });
-    
-    
-    
-    
-    
+    $("#ChatBox div:eq(0)").scrollTop(999999); 	//滚动条移动至最底部  
 });
 
 //人名nickname，时间date，是否自己isSelf，内容content
@@ -193,7 +189,6 @@ function addMessage(msg){
 	box.css((msg.nickname == "客服" ? 'margin-left':'margin-right'),"40%");//外边距
 	
 	$("#ChatBox div:eq(0)").scrollTop(999999); 	//滚动条移动至最底部
-	
 }
 
 
