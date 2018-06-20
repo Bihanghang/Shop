@@ -79,8 +79,9 @@ $(document).ready(function(){
 						console.log("没有消息")
 					}else{
 						console.log("data",data);
-						$("#kefuimg").attr("src","img/side_icon05.png");
-						$("#kefuNum").text(data+"条未读");
+						data = "&nbsp;&nbsp;"+data;
+						$("#kefuimg").attr("src","img/laixiaoxi.png");
+						$("#kefuNum").html(data+"条未读");
 					}
 				});
 		},3000)
@@ -159,7 +160,7 @@ function(data){
 							<a href="login.jsp" id="startlogin">${user_phone == null ?'登录':user_name }</a>
 						</div>
 						<div class="box1" id="test">
-							<a href="indexServlet"> 注册</a>						
+							<a href="indexServlet"> ${user_phone == null ?'':注册 }</a>						
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -371,7 +372,7 @@ function(data){
 
 	<ul>
 
-		<li onclick='Client()'><a href="javascript:void(0);" ><div class="sidebox"><img id="kefuimg" src="img/side_icon04.png"><span id="kefuNum">客服</span></div></a></li>
+		<li onclick='Client()'><a href="javascript:void(0);" ><div class="sidebox"><img id="kefuimg" src="img/xiaoxi.png"><span id="kefuNum">&nbsp;&nbsp;&nbsp;&nbsp;客服</span></div></a></li>
 
 		<li><a href="checkoutServlet" ><div class="sidebox"><img src="img/cc.jpg">&nbsp;&nbsp;&nbsp;&nbsp;购物车</div></a></li>
 

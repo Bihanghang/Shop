@@ -1,6 +1,6 @@
-create table users(
+create table user(
 	user_name nvarchar(20) null,
-	user_paswprd nvarchar(20) null,
+	user_password nvarchar(20) null,
 	user_sex nvarchar(4) null,
 	user_addr nvarchar(50) null,
 	user_phone nvarchar(11) primary key not null,
@@ -19,7 +19,7 @@ create table product(
 create table cart(
      user_phone varchar(11) not null,
      itemid  int(10) null,
-     itemnum int(4) null
+     itemnum int(4) default 1
      );
     
 create table message(
@@ -27,7 +27,9 @@ create table message(
 	to_mess  TINYTEXT null,
 	to_date datetime null,
 	to_user nvarchar(20) null,
-	isSelf tinyint null
+	isSelf tinyint null,
+	messtype varchar(20) default 'normal',
+	linetype varchar(20) default 'online'
 );
  insert into user (user_name,user_password,user_sex,user_addr,user_phone,
  user_birth,user_jifen,user_touxiang) values("葫芦娃","456",'男','广东','159','97-10-23',100,'lk');

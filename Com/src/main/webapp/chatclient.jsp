@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>真知谷-聊天室</title>
+  <title>聊天室</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
@@ -32,23 +32,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <header class="am-topbar am-topbar-fixed-top">
 	  <div class="am-container">
 	    <h1 class="am-topbar-brand">
-	      <a href="#">聊天室</a>
+	      <a href="javascript:void(0);">聊天室</a>
 	    </h1>
 	    <div class="am-collapse am-topbar-collapse" id="collapse-head">
-	      <ul class="am-nav am-nav-pills am-topbar-nav">
-	        <li class="am-active"><a href="#">首页</a></li>
-	        <li><a href="#">项目</a></li>
-	      </ul>
-	
-	      <div class="am-topbar-right">
-	        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm"><span class="am-icon-pencil"></span> 注册</button>
-	      </div>
-	
-	      <div class="am-topbar-right">
-	        <button class="am-btn am-btn-primary am-topbar-btn am-btn-sm"><span class="am-icon-user"></span> 登录</button>
-	      </div>
-	    </div>
-	  </div>
+	      
+		  </div>
 	</header>
 	
 	<div id="main">

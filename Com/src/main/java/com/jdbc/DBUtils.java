@@ -11,7 +11,7 @@ public class DBUtils {
 		Connection con=null;
 		String url,user,password,driverClass;
 		
-		url="jdbc:mysql://127.0.0.1/shopdata";
+		url="jdbc:mysql://localhost:3306/shopdata";
 		user="root";
 		password="721214wan..";
 		driverClass="com.mysql.jdbc.Driver";
